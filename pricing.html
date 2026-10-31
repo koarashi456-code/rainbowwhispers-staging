@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>方案｜彩之語 Rainbow Whisper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .price-hero{padding:44px 20px 8px}
+  .feat .soon{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;background:#F4EAD4;color:#8A6A44;margin-left:4px;vertical-align:1px}
+  .tiers{max-width:740px;margin:26px auto 0;padding:0 20px;display:grid;grid-template-columns:repeat(2,1fr);gap:18px;align-items:stretch}
+  .tier{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:26px 24px 24px;display:flex;flex-direction:column;position:relative}
+  .tier.featured{border:2px solid transparent;background:linear-gradient(var(--card),var(--card)) padding-box, var(--rainbow) border-box;box-shadow:0 22px 46px -24px rgba(150,120,160,.55)}
+  .ribbon{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--rainbow);color:#4A3A2A;font-size:12.5px;font-weight:600;letter-spacing:.02em;padding:5px 18px;border-radius:999px;white-space:nowrap;box-shadow:0 8px 18px -8px rgba(150,120,160,.6)}
+  .tier-name{font-family:"Noto Serif TC",serif;font-size:19px;color:var(--brush);font-weight:600}
+  .tier-tag{font-size:13px;color:var(--soft);margin-top:5px;min-height:19px}
+  .tier-price{display:flex;align-items:baseline;gap:5px;margin:16px 0 2px;flex-wrap:wrap}
+  .tier-price .cur{font-size:16px;color:var(--soft);font-weight:500}
+  .tier-price .num{font-family:"Noto Serif TC",serif;font-size:40px;color:var(--ink);line-height:1}
+  .tier-price .unit{font-size:14px;color:var(--soft)}
+  .pricenote{font-size:12.5px;color:#4F8E6E;font-weight:500;margin-top:1px;min-height:17px}
+  .tier-hr{height:1px;background:var(--line);margin:16px 0 4px}
+
+  .billtoggle{display:inline-flex;background:#F3EAD9;border-radius:999px;padding:3px;margin:16px 0 4px;gap:3px}
+  .bt{font:inherit;font-size:13px;color:var(--soft);background:none;border:none;padding:7px 15px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s}
+  .bt.on{background:#fff;color:var(--brush);font-weight:500;box-shadow:0 2px 8px -3px rgba(120,90,60,.3)}
+  .bt .save{font-size:10.5px;background:var(--rainbow);color:#4A3A2A;padding:1px 7px;border-radius:999px;font-weight:700;letter-spacing:.02em}
+
+  .feat{list-style:none;margin:12px 0 22px;display:flex;flex-direction:column;gap:11px}
+  .feat li{position:relative;padding-left:27px;font-size:14px;color:var(--ink);line-height:1.5}
+  .feat li::before{content:"";position:absolute;left:0;top:1px;width:18px;height:18px;background:center/contain no-repeat url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'><circle cx='12' cy='12' r='11' fill='%23F1E6D2'/><path d='M7 12.4l3.2 3.2L17 9' stroke='%23B5713F' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/></svg>")}
+  .feat li.hi{font-weight:500;color:var(--brush)}
+  .feat li.hi::before{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'><circle cx='12' cy='12' r='11' fill='%23EAD9F2'/><path d='M7 12.4l3.2 3.2L17 9' stroke='%236E4F9E' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/></svg>")}
+  .btnrow{margin-top:auto}
+  .btnrow .rw-cta,.btnrow .rw-ghost{display:block;width:100%;text-align:center;padding-left:0;padding-right:0;box-sizing:border-box}
+
+  .reassure{max-width:600px;margin:30px auto 4px;text-align:center;font-size:14.5px;color:var(--soft);line-height:1.7;padding:0 20px}
+  .reassure b{color:var(--brush);font-weight:500}
+  .feenote{max-width:600px;margin:14px auto 0;text-align:center;font-size:12.5px;color:#B6A283;padding:0 20px;line-height:1.7}
+
+  @media(max-width:720px){
+    .tiers{grid-template-columns:1fr;max-width:420px;gap:24px;margin-top:30px}
+  }
+</style>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="彩之語 Rainbow Whisper">
+<meta property="og:title" content="方案｜彩之語 Rainbow Whisper">
+<meta property="og:description" content="身心靈引路人配對平台：先做約 3 分鐘的心靈導航測驗，遇見頻率真正合得來的引路人。">
+<meta property="og:url" content="https://koarashi456-code.github.io/rainbowwhispers/pricing.html">
+<meta property="og:image" content="https://koarashi456-code.github.io/rainbowwhispers/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FAF4E6">
+</head>
+<body>
+<div id="rw-staging-banner" style="background:#FBE7CC;color:#5A4632;font-size:13px;line-height:1.6;text-align:center;padding:8px 14px;border-bottom:1px solid #ECDFC6;font-family:'Noto Sans TC','PingFang TC',sans-serif">⚠️ 這是<b>測試站</b>，只用來確認畫面。這裡連的是正式資料庫，請勿送出預約、付款、儲值或任何表單。　<a href="https://koarashi456-code.github.io/rainbowwhispers/" style="color:#6B4A33">前往正式站 →</a></div>
+
+<nav class="rw-nav"><div class="rw-nav-in">
+  <a class="rw-brand" href="index.html">彩之語<small>RAINBOW WHISPER</small></a>
+  <input type="checkbox" id="rw-burger" class="rw-burger-cb" aria-label="選單"><label for="rw-burger" class="rw-burger" aria-hidden="true"><span></span><span></span><span></span></label>
+  <div class="rw-links">
+    <a href="index.html">首頁</a>
+    <a href="tests.html">測驗</a>
+    <a href="booking.html">引路人・商品</a>
+    <a class="on" href="pricing.html">方案</a>
+    <a href="account.html">會員</a>
+    <a class="rw-nav-line" href="https://lin.ee/t0NBjud0" target="_blank" rel="noopener">加 LINE</a>
+  </div>
+</div></nav>
+<script src="nav.js"></script>
+
+<section class="price-hero rw-center">
+  <div class="rw-kicker">彩之語 · 方案</div>
+  <h1 class="rw-h1">選擇你的探索方式</h1>
+  <div class="rw-divider"></div>
+  <p class="rw-p" style="max-width:520px;margin:0 auto">先免費探索，需要時再讓我們陪你走下一步。<br>找引路人，永遠不會被鎖在付費牆後面。</p>
+</section>
+
+<div class="tiers">
+
+  <!-- 免費會員 -->
+  <div class="tier">
+    <div class="tier-name">免費會員</div>
+    <div class="tier-tag">你的探索起點</div>
+    <div class="tier-price"><span class="cur">NT$</span><span class="num">0</span><span class="unit">／永久免費</span></div>
+    <div class="pricenote"></div>
+    <div class="tier-hr"></div>
+    <ul class="feat">
+      <li>心靈導航測驗</li>
+      <li>查看你的探索類型</li>
+      <li>瀏覽所有引路人</li>
+      <li>查看引路人評價 <span class="soon">即將推出</span></li>
+      <li>收藏喜歡的引路人 <span class="soon">即將推出</span></li>
+      <li>瀏覽文章與短內容 <span class="soon">即將推出</span></li>
+    </ul>
+    <div class="btnrow"><a class="rw-cta" href="account.html">免費註冊</a></div>
+  </div>
+
+  <!-- 探索會員 -->
+  <div class="tier featured">
+    <div class="ribbon">即將推出</div>
+    <div class="tier-name">探索會員</div>
+    <div class="tier-tag">給想持續探索的你</div>
+    <div class="billtoggle" id="billtoggle">
+      <button class="bt on" data-bill="m" type="button">月繳</button>
+      <button class="bt" data-bill="y" type="button">年繳 <span class="save">省 $118</span></button>
+    </div>
+    <div class="tier-price"><span class="cur">NT$</span><span class="num" id="price-num">59</span><span class="unit" id="price-unit">／每月</span></div>
+    <div class="pricenote" id="price-note"></div>
+    <div class="tier-hr"></div>
+    <ul class="feat">
+      <li class="hi">每月一次完整心靈導航分析</li>
+      <li class="hi">每月限定心理測驗</li>
+      <li class="hi">預約媒合費全額折抵</li>
+      <li>引路人推薦優先排序</li>
+      <li>會員限定引路人／服務優惠</li>
+      <li>個人探索紀錄</li>
+      <li>收藏／追蹤引路人</li>
+      <li>會員專屬內容</li>
+    </ul>
+    <div class="btnrow"><a class="rw-cta" href="https://lin.ee/t0NBjud0" target="_blank" rel="noopener">加 LINE，開放時通知我</a></div>
+    <div class="pricenote" style="margin-top:8px">探索會員即將推出，目前尚未開放購買。</div>
+  </div>
+
+</div>
+
+<p class="reassure">所有人都能<b>免費做測驗、瀏覽引路人</b>。<br>會員只是多給你一些陪伴與工具，不是解鎖找引路人的鑰匙。</p>
+<p class="feenote">每次預約引路人另有 NT$39 媒合服務費，會在預約付款時清楚顯示；探索會員推出後可全額折抵。</p>
+
+<div style="height:36px"></div>
+
+<footer class="rw-footer">
+  <div class="rw-brand2 rw-serif">彩之語</div>
+  <div class="rw-foot-en">RAINBOW WHISPER</div>
+  <p class="rw-foot-note">溫馨提醒：本平台僅提供引路人媒合服務，不對命理或玄學內容的準確性與結果負責。我們只蒐集必要的個人資料，並妥善保護你的隱私。</p>
+  <div class="rw-foot-links"><a href="policies.html#refund">取消與退費</a>·<a href="policies.html#privacy">隱私權政策</a>·<a href="https://lin.ee/t0NBjud0" target="_blank" rel="noopener">聯絡我們</a></div>
+  <div class="rw-copy">© 2026 彩之語 Rainbow Whisper</div>
+</footer>
+
+<script>
+(function(){
+  var tog=document.getElementById('billtoggle');
+  var num=document.getElementById('price-num'), unit=document.getElementById('price-unit'), note=document.getElementById('price-note');
+  tog.addEventListener('click',function(e){
+    var b=e.target.closest('.bt'); if(!b) return;
+    tog.querySelectorAll('.bt').forEach(function(x){x.classList.toggle('on',x===b);});
+    if(b.getAttribute('data-bill')==='y'){
+      num.textContent='590'; unit.textContent='／每年';
+      note.textContent='平均約 $49／月 · 省 $118（約 2 個月免費）';
+    }else{
+      num.textContent='59'; unit.textContent='／每月';
+      note.textContent='';
+    }
+  });
+})();
+</script>
+</body>
+</html>

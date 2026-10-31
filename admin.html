@@ -1,0 +1,1864 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>後台管理｜彩之語 Rainbow Whisper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .admin-bar{position:sticky;top:0;z-index:40;background:rgba(250,244,230,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  .admin-bar-in{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 18px 6px;gap:10px}
+  .admin-title{font-family:"Noto Serif TC",serif;font-weight:600;color:var(--brush);font-size:18px}
+  .abtn{font:inherit;font-size:13px;padding:7px 14px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--brush);cursor:pointer;text-decoration:none;display:inline-block}
+  .abtn:hover{background:var(--tint)}
+  .tabbar{max-width:960px;margin:0 auto;display:flex;gap:4px;padding:0 18px 10px;flex-wrap:wrap}
+  .tabbar button{font:inherit;font-size:14px;color:var(--soft);background:none;border:none;padding:8px 14px;border-radius:999px;cursor:pointer}
+  .tabbar button.on{background:var(--brush);color:#fff;font-weight:500}
+
+  .wrap{max-width:960px;margin:0 auto;padding:18px 18px 60px}
+
+  .login{max-width:340px;margin:9vh auto;padding:0 20px;text-align:center}
+  .login .logo{width:64px;height:64px;border-radius:50%;margin:0 auto 16px;background:conic-gradient(from 200deg,#E8927C,#F0C66B,#9FD49A,#7FC8D9,#A99BE0,#E6A3C3,#E8927C);opacity:.9}
+  .login h1{font-family:"Noto Serif TC",serif;font-size:20px;color:var(--brush);margin-bottom:4px}
+  .login p{font-size:13px;color:var(--soft);margin-bottom:20px}
+  .fld{width:100%;font:inherit;font-size:15px;color:var(--ink);background:#FBF6EC;border:1.5px solid #EFE3CE;border-radius:12px;padding:12px 15px;outline:none;margin-bottom:12px}
+  .fld:focus{border-color:#C9A7DE}
+  .login-btn{width:100%;font:inherit;font-weight:500;font-size:15px;color:#4A3A2A;background:var(--rainbow);border:none;border-radius:999px;padding:13px 0;cursor:pointer}
+  .login-btn:disabled{opacity:.65}
+  .err{color:#C0506A;font-size:13px;min-height:18px;margin-top:4px}
+
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 8px}
+  .filters input,.filters select{font:inherit;font-size:14px;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;outline:none}
+  .filters input{flex:1;min-width:150px}
+  .filters input:focus,.filters select:focus{border-color:#C9A7DE}
+  .count{font-size:13px;color:var(--soft);margin:6px 2px 12px}
+  .sec-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .addbtn{font:inherit;font-size:14px;font-weight:500;color:#4A3A2A;background:var(--rainbow);border:none;border-radius:999px;padding:10px 20px;cursor:pointer}
+
+  .cust{background:#FFFDF8;border:1px solid var(--line);border-radius:14px;padding:15px 16px;margin-bottom:12px}
+  .cust-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .type-badge{display:inline-block;font-size:13px;font-weight:500;color:#6E4F9E;background:#EAD9F2;padding:3px 11px;border-radius:999px}
+  .src-badge{display:inline-block;font-size:11px;padding:2px 9px;border-radius:999px;margin-right:2px}
+  .src-q{background:#E7EEF4;color:#5A7A94}
+  .src-m{background:#D8ECDF;color:#3F7A5E}
+  .topic{font-size:14px;color:var(--soft)}
+  .meta{font-size:12px;color:#A9967E;white-space:nowrap}
+  .cust-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .cust label{display:flex;flex-direction:column;font-size:11.5px;color:var(--soft);gap:4px}
+  .cust .in{font:inherit;font-size:14px;color:var(--ink);background:#FBF6EC;border:1.5px solid #EFE3CE;border-radius:9px;padding:8px 10px;outline:none}
+  .cust .in:focus{border-color:#C9A7DE;background:#fff}
+  .notes-l{margin-top:10px}
+  .notes-l textarea,.notes-l input{width:100%}
+  .notes-l textarea{min-height:44px;resize:vertical}
+  .cust-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:10px}
+  .saved{font-size:12px}
+  .del{font:inherit;font-size:12px;color:#B87;background:none;border:none;cursor:pointer;text-decoration:underline}
+  .del:hover{color:#C0506A}
+  .muted{color:var(--soft);font-size:14px}
+  .soon{text-align:center;padding:50px 20px;color:var(--soft)}
+  .soon h3{font-family:"Noto Serif TC",serif;font-size:17px;color:var(--brush);margin-bottom:8px}
+
+  .summary{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;margin-bottom:10px;padding:8px 12px;background:var(--tint);border-radius:10px}
+  .summary b{color:var(--brush)}
+  .rlink{font:inherit;font-size:12px;color:var(--brush);background:none;border:none;cursor:pointer;text-decoration:underline;padding:0}
+  .records{margin-top:8px;font-size:13px}
+  .rec{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px dashed var(--line)}
+  .rec small{color:var(--soft)}
+  .recdel{font:inherit;font-size:12px;color:#B87;background:none;border:none;cursor:pointer;margin-left:6px}
+  .recdel:hover{color:#C0506A}
+  .rp-h{font-family:"Noto Serif TC",serif;font-size:15px;color:var(--brush);margin:18px 0 10px}
+  .rp-filter{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:4px 0 14px}
+  .rp-flabel{font-size:13px;color:var(--soft)}
+  .rp-dates{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+  .rp-dates .in-sm{flex:1;min-width:0}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin-bottom:10px}
+  .stat{background:#FFFDF8;border:1px solid var(--line);border-radius:12px;padding:12px 13px;min-width:0}
+  .stat .k{font-size:12px;color:var(--soft)}
+  .stat .v{font-family:"Noto Serif TC",serif;font-size:18px;color:var(--brush);margin-top:3px;word-break:break-word}
+  .in-sm{font:inherit;font-size:14px;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:7px 10px;outline:none}
+  .rptable{width:100%;border-collapse:collapse;font-size:14px}
+  .rptable th,.rptable td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left}
+  .rptable th{font-size:12px;color:var(--soft);font-weight:500}
+  .rptable td.num,.rptable th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .gblock{background:#FFFDF8;border:1px solid var(--line);border-radius:14px;padding:6px 14px;margin-bottom:12px}
+  .gblock-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;padding:9px 0;cursor:pointer}
+  .gblock:not(.collapsed) .gblock-head{border-bottom:1px solid var(--line);margin-bottom:2px}
+  .gblock-head b{font-size:15px;color:var(--brush)}
+  .gh-meta{font-size:12.5px;color:var(--soft);margin-left:auto}
+  .gitem{padding:10px 0;border-bottom:1px dashed var(--line)}
+  .gitem:last-child{border-bottom:none}
+  .gi-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .gi-name{font-size:14.5px;color:var(--ink);font-weight:500}
+  .gi-right{display:flex;align-items:center;gap:8px;white-space:nowrap;flex:none}
+  .gi-amt{font-variant-numeric:tabular-nums;color:var(--brush);font-weight:600}
+  .gi-when{font-size:12.5px;color:var(--soft);margin-top:3px;line-height:1.5}
+  .gi-meta{font-size:11.5px;color:#A48C72;margin-top:2px;line-height:1.55;word-break:break-word}
+  .caret{display:inline-block;font-size:11px;color:var(--soft);margin-right:3px;transition:transform .15s}
+  .gblock.collapsed .caret{transform:rotate(-90deg)}
+  .gblock.collapsed .gitems{display:none}
+  .chead{cursor:pointer}
+  .a-edit{border:0;background:none;color:#B49AC8;font-size:14px;line-height:1;padding:3px 5px;margin:-3px 0;border-radius:7px;cursor:pointer;vertical-align:baseline}
+  .a-edit:hover{background:#F4ECF9}
+  .a-orig{font-weight:400;color:var(--soft);font-size:.9em}
+  .a-alias{font:inherit;font-weight:600;font-size:14px;color:var(--ink);background:#fff;border:1.5px solid #C9A7DE;border-radius:7px;padding:3px 7px;outline:none;width:9em;max-width:60vw}
+  .cust.collapsed .caret{transform:rotate(-90deg)}
+  .cust.collapsed .cbody{display:none}
+
+  .formcard{background:#FFFDF8;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+  .formcard h3{font-family:"Noto Serif TC",serif;font-size:15px;color:var(--brush);margin-bottom:12px}
+  .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+  .fgrid label{display:flex;flex-direction:column;font-size:11.5px;color:var(--soft);gap:4px}
+  .fgrid .in{font:inherit;font-size:14px;color:var(--ink);background:#FBF6EC;border:1.5px solid #EFE3CE;border-radius:9px;padding:8px 10px;outline:none}
+  .fgrid .in:focus{border-color:#C9A7DE;background:#fff}
+  .shop-seg{display:inline-flex;background:#F3E9D6;border-radius:999px;padding:3px;margin:4px 0 12px}
+  .shop-seg button{font:inherit;font-size:13.5px;color:var(--soft);background:none;border:0;border-radius:999px;padding:7px 16px;cursor:pointer}
+  .shop-seg button.on{background:#fff;color:var(--brush);font-weight:500;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  #so-badge{display:inline-block;min-width:16px;font-size:11px;color:#fff;background:#C98A6A;border-radius:999px;padding:0 6px;margin-left:2px}
+  #so-badge:empty{display:none}
+  .status-badge.st-ship{background:#DCEAF2;color:#4E7A94}
+  .sp-add-row .in{font:inherit;font-size:14px;color:var(--ink);background:#FBF6EC;border:1.5px solid #EFE3CE;border-radius:9px;padding:8px 10px;outline:none;box-sizing:border-box}
+  /* 可搜尋下拉（新增交易／儲值的客戶、引路人） */
+  .cbx{position:relative;display:block}
+  .cbx-input{width:100%;box-sizing:border-box}
+  .cbx-pop{position:absolute;left:0;right:0;top:calc(100% + 4px);background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 30px -16px rgba(120,90,60,.45);max-height:230px;overflow-y:auto;z-index:40;display:none}
+  .cbx-pop.open{display:block}
+  .cbx-opt{padding:9px 12px;font-size:14px;color:var(--ink);cursor:pointer;border-bottom:1px solid #F3EADB;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cbx-opt:last-child{border-bottom:none}
+  .cbx-opt:hover{background:var(--tint)}
+  .cbx-opt small{color:var(--soft);font-size:12px;margin-left:6px}
+  .cbx-empty{padding:10px 12px;font-size:13px;color:var(--soft)}
+  .status-badge{display:inline-block;font-size:12px;padding:2px 10px;border-radius:999px}
+  .st-book{background:#FBE7CC;color:#A5643A}
+  .st-done{background:#D8ECDF;color:#3F7A5E}
+  .st-cancel{background:#EDE6DC;color:#8A7659}
+  .st-noshow{background:#F6DDE3;color:#B4566E}
+  .st-refund{background:#F3D9DE;color:#B5566E}
+  /* 交易紀錄 Excel 風表格 */
+  .txtable-wrap{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table.txt{border-collapse:collapse;width:100%;font-size:13px;min-width:860px}
+  table.txt thead th{background:#F3E9D6;color:var(--brush);font-weight:500;text-align:left;padding:10px 11px;border-bottom:2px solid #E4D4B8;white-space:nowrap;position:sticky;top:0}
+  table.txt thead th.sortable{cursor:pointer;user-select:none}
+  table.txt thead th .arr{color:#C2A878;font-size:10px;margin-left:4px}
+  table.txt th,table.txt td{border-right:1px solid #EFE3CC}
+  table.txt th:last-child,table.txt td:last-child{border-right:none}
+  table.txt tbody td{padding:7px 11px;border-bottom:1px solid #F0E6D2;white-space:nowrap;color:var(--ink);vertical-align:middle}
+  table.txt th.ck,table.txt td.ck{width:34px;min-width:34px;text-align:center;padding-left:6px;padding-right:6px}
+  .txbulk{display:flex;align-items:center;gap:12px;margin-bottom:10px;padding:8px 12px;background:#FBF6EC;border:1px solid var(--line);border-radius:10px;flex-wrap:wrap}
+  .bulkdel{font:inherit;font-size:13px;color:#C0506A;background:#fff;border:1.5px solid #E7C3C3;border-radius:999px;padding:7px 16px;cursor:pointer}
+  .bulkdel:disabled{opacity:.45;cursor:not-allowed}
+  .trbulk{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:8px 12px;background:#FBF6EC;border:1px solid var(--line);border-radius:10px;flex-wrap:wrap}
+  table.txt tbody tr:nth-child(even){background:#FCF7EC}
+  table.txt tbody tr:hover{background:#F6EEDC}
+  table.txt td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .status-badge.st-topup{background:#E7DBF4;color:#6E4F9E}
+  table.txt tr.tp-row td{background:#FBF7FD}
+  table.txt td.muted,table.txt .muted2{color:var(--soft)}
+  table.txt td.ref{font-family:ui-monospace,monospace;font-size:12px;color:var(--soft)}
+  table.txt .tin{font:inherit;font-size:13px;color:var(--ink);background:transparent;border:1px solid transparent;border-radius:6px;padding:4px 6px;outline:none;max-width:150px}
+  table.txt .tin:hover{border-color:var(--line)} table.txt .tin:focus{border-color:#C9A7DE;background:#fff}
+  table.txt input.tin.amt{width:82px;text-align:right}
+  table.txt select.tin{cursor:pointer}
+  table.txt .txdel{background:none;border:none;color:#C9A7A7;cursor:pointer;font-size:14px;padding:2px 6px}
+  table.txt .txdel:hover{color:#B5566E}
+  .txfoot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:10px 13px;background:#FAF3E6;border-top:1px solid var(--line);font-size:12.5px;color:var(--soft)}
+  .txfoot b{color:var(--brush)}
+  .txsaved{font-size:12px;margin:6px 2px;min-height:15px;color:#4F8E6E;text-align:right}
+  @media(max-width:520px){ .cust-grid,.fgrid{grid-template-columns:1fr} }
+
+  /* 通知鈴鐺 */
+  .bell-wrap{position:relative}
+  .bell{position:relative;display:flex;align-items:center;justify-content:center;width:38px;height:34px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--brush);cursor:pointer;padding:0}
+  .bell:hover{background:var(--tint)}
+  .bell svg{width:18px;height:18px}
+  .bell-badge{position:absolute;top:-5px;right:-4px;min-width:17px;height:17px;padding:0 4px;box-sizing:border-box;border-radius:999px;background:#D4694E;color:#fff;font-size:11px;line-height:17px;text-align:center;font-weight:700;display:none}
+  .bell-badge.show{display:block}
+  .npanel{position:absolute;top:calc(100% + 8px);right:0;width:340px;max-width:calc(100vw - 24px);max-height:70vh;overflow-y:auto;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 16px 40px -16px rgba(120,90,60,.4);z-index:60;display:none}
+  .npanel.open{display:block}
+  .npanel-head{position:sticky;top:0;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:12px 14px 8px;border-bottom:1px solid var(--line)}
+  .npanel-head b{font-family:"Noto Serif TC",serif;font-size:15px;color:var(--brush)}
+  .npanel-head .rlink{font-size:12px}
+  .nfilters{display:flex;gap:6px;padding:8px 12px;flex-wrap:wrap;border-bottom:1px solid var(--line);position:sticky;top:41px;background:#fff}
+  .nchip{font:inherit;font-size:12px;color:var(--soft);background:var(--tint);border:none;border-radius:999px;padding:5px 11px;cursor:pointer}
+  .nchip.on{background:var(--brush);color:#fff}
+  .nitem{display:flex;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .12s}
+  .nitem:last-child{border-bottom:none}
+  .nitem:hover{background:#FBF6EC}
+  .nitem.unread{background:#FBF1E2}
+  .nitem.unread:hover{background:#F6E9D3}
+  .ndot{flex:none;width:8px;height:8px;border-radius:50%;margin-top:6px}
+  .nbody{flex:1;min-width:0}
+  .ntop{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+  .ntag{font-size:11.5px;font-weight:600}
+  .ntime{font-size:11px;color:#A9967E;white-space:nowrap;flex:none}
+  .nmain{font-size:13.5px;color:var(--ink);margin-top:2px;word-break:break-word}
+  .nsub{font-size:12px;color:var(--soft);margin-top:1px;word-break:break-word}
+  .nempty{padding:36px 20px;text-align:center;color:var(--soft);font-size:14px}
+  @media(max-width:520px){
+    .npanel{position:fixed;top:60px;left:10px;right:10px;width:auto;max-width:none;max-height:calc(100vh - 74px)}
+  }
+  /* 引路人卡：可預約時段（點選新增，與引路人後台同一套） */
+  .gs-chips{display:flex;flex-wrap:wrap;gap:7px}
+  .gs-chip{font:inherit;font-size:12.5px;color:var(--ink);background:#fff;border:1.5px solid #EFE3CE;border-radius:999px;padding:6px 12px;cursor:pointer;user-select:none}
+  .gs-chip.on{background:var(--rainbow);color:#4A3A2A;border-color:transparent;font-weight:500}
+  .gs-chip.has{background:#F3EFE6;color:#B5A88E;border-color:#EFE3CE;cursor:default}
+  .gs-d{font-size:12.5px;color:var(--brush);font-weight:500;margin:10px 0 6px}
+  .gs-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:2px}
+  .gs-pill{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink);background:#fff;border:1.5px solid #EFE3CE;border-radius:999px;padding:5px 10px 5px 12px}
+  .gs-pill .gs-rm{color:#C0506A;font-size:14px;cursor:pointer;line-height:1}
+  .gs-pill.booked{background:#F3EFE6;color:#8E8065}
+  .gs-pill .gs-bk{font-size:11px;color:#C0506A}
+  /* 行事曆（所有引路人的預約） */
+  .acal-chips{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 12px}
+  .acal-chip{font:inherit;font-size:13px;color:var(--ink);background:#fff;border:1.5px solid #EFE3CE;border-radius:999px;padding:5px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .acal-chip.on{background:var(--brush);color:#fff;border-color:var(--brush)}
+  .acal-chip i,.acal-legend i,.acal-d .dots i{display:inline-block;width:7px;height:7px;border-radius:50%}
+  .acal-wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start}
+  .acal-card{background:#FFFDF8;border:1px solid var(--line);border-radius:16px;padding:14px}
+  .acal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .acal-head span{font-family:"Noto Serif TC",serif;font-size:16px;font-weight:600;color:var(--brush)}
+  .acal-nav{font:inherit;font-size:20px;line-height:1;color:var(--brush);background:#FBF6EC;border:1.5px solid #EFE3CE;border-radius:999px;width:34px;height:34px;cursor:pointer}
+  .acal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .acal-wd span{font-size:11.5px;color:var(--soft);text-align:center;padding:2px 0}
+  .acal-d{font:inherit;position:relative;aspect-ratio:1/1;min-height:38px;border:1.5px solid transparent;border-radius:10px;background:#FBF6EC;color:var(--ink);font-size:13px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:0}
+  .acal-d.out{background:transparent;cursor:default}
+  .acal-d.today{border-color:#E7C9A6}
+  .acal-d.sel{background:var(--rainbow);color:#4A3A2A;font-weight:600}
+  .acal-d .dots{display:flex;gap:2px;height:7px}
+  .acal-d .dots i{width:6px;height:6px}
+  .acal-d .cnt{position:absolute;top:2px;right:4px;font-size:10px;color:#A5643A;font-weight:600}
+  .acal-legend{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-size:11.5px;color:var(--soft);margin-top:10px}
+  .acal-legend i{margin-right:4px;vertical-align:1px}
+  .acal-today{margin-left:auto;font:inherit;font-size:12px;color:var(--brush);background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer}
+  .acal-dt{font-size:14px;font-weight:600;color:var(--brush);margin-bottom:4px}
+  .acal-it{font:inherit;display:flex;gap:9px;align-items:center;width:100%;background:none;border:0;border-bottom:1px dashed #EFE3CE;padding:9px 0;font-size:13.5px;text-align:left;cursor:pointer;color:var(--ink)}
+  .acal-it:last-of-type{border-bottom:0}
+  .acal-it .t{flex:none;width:44px;font-weight:600;color:var(--brush)}
+  .acal-it .m{flex:1;min-width:0}
+  .acal-it .m small{display:block;font-size:11.5px;color:var(--soft);margin-top:1px}
+  .acal-it.off{opacity:.55}
+  .acal-gp{display:inline-block;font-size:11px;border-radius:999px;padding:0 7px;margin-right:5px;font-weight:500;color:var(--ink)}
+  .acal-go{flex:none;color:#C2A878;font-size:18px}
+  .acal-open{font-size:12px;color:var(--soft);margin-top:12px}
+  .acal-open span{display:inline-block;font-size:11.5px;color:#3F7A5E;background:#E4F2E7;border-radius:999px;padding:2px 9px;margin:5px 5px 0 0}
+  .acal-empty{font-size:13px;color:var(--soft);padding:10px 0}
+  tr.flash td{animation:rwflash 2.2s ease}
+  @keyframes rwflash{0%,40%{background:#FBE7CC}100%{background:transparent}}
+
+  /* 手機版：跟引路人後台一樣「條列選單 → 點進去」 */
+  #m-home,.m-top,.m-cardtop,.m-tools,.m-detail{display:none}
+  .m-today{background:#FFFDF8;border:1px solid var(--line);border-radius:16px;padding:12px 6px;display:grid;grid-template-columns:repeat(4,1fr);text-align:center;margin-bottom:12px}
+  .m-today button{font:inherit;background:none;border:0;cursor:pointer;font-size:11.5px;color:var(--soft);line-height:1.4;padding:0 2px}
+  .m-today b{display:block;font-size:20px;color:var(--brush);font-weight:600;line-height:1.35}
+  .m-today .warn b{color:#B5713F}
+  .m-menu{background:#FFFDF8;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .m-menu button{font:inherit;display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-bottom:1px solid var(--line);padding:13px 16px;cursor:pointer;text-align:left;color:var(--ink)}
+  .m-menu button:last-child{border-bottom:0}
+  .m-menu .gm-ic{flex:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px}
+  .m-menu .gm-t{flex:1;min-width:0;font-size:15px;font-weight:500;color:var(--brush)}
+  .m-menu .gm-t small{display:block;font-size:12px;font-weight:400;color:var(--soft);margin-top:1px}
+  .m-menu .gm-n{flex:none;font-size:11px;color:#fff;background:#E08A6E;border-radius:999px;padding:1px 8px}
+  .m-menu .gm-go{flex:none;color:#C2A878;font-size:20px}
+  .m-top,.m-cardtop{align-items:center;gap:10px;margin:0 0 12px}
+  .m-back{font:inherit;font-size:14px;color:var(--soft);background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:5px 13px;cursor:pointer}
+  .m-h{font-family:"Noto Serif TC",serif;font-size:18px;font-weight:600;color:var(--brush)}
+  .m-list{background:#FFFDF8;border:1px solid var(--line);border-radius:16px;padding:2px 14px}
+  .m-row{font:inherit;display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;border-bottom:1px solid var(--line);padding:11px 0;cursor:pointer;text-align:left;color:var(--ink)}
+  .m-row:last-child{border-bottom:0}
+  .m-row .mn{flex:1;min-width:0;font-size:14px;word-break:break-word}
+  .m-row .mn b{color:var(--brush);font-weight:600}
+  .m-row .mn small{display:block;font-size:12px;color:var(--soft);margin-top:2px}
+  .m-row .rt{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+  .m-row .am{font-weight:600;color:var(--brush);font-size:14px;white-space:nowrap}
+  .m-row .go{flex:none;color:#C2A878;font-size:18px}
+  .m-card{background:#FFFDF8;border:1px solid var(--line);border-radius:16px;padding:14px}
+  .m-card .hd{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:4px}
+  .m-card .hd b{color:var(--brush);font-size:16px;word-break:break-word}
+  .m-card .hd .am{font-size:18px;font-weight:600;color:var(--brush);white-space:nowrap}
+  .m-f{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;border-bottom:1px dashed #EFE3CE;font-size:13.5px}
+  .m-f>span:first-child{color:var(--soft);flex:none}
+  .m-f>span:last-child{text-align:right;min-width:0;word-break:break-word}
+  .m-f .in{font:inherit;font-size:14px;color:var(--ink);background:#FBF6EC;border:1.5px solid #EFE3CE;border-radius:9px;padding:6px 9px;outline:none;max-width:190px;text-align:right}
+  .m-f .in:focus{border-color:#C9A7DE;background:#fff}
+  .m-btns{display:flex;gap:8px;margin-top:14px}
+  .m-btns button{flex:1;font:inherit;font-size:13.5px;border-radius:999px;padding:9px 0;border:1.5px solid var(--line);background:#fff;color:var(--brush);cursor:pointer}
+  .m-btns .dl{color:#C0506A}
+  .m-saved{font-size:12px;min-height:16px;margin-top:6px;text-align:right}
+  .m-prod{background:#FFFDF8;border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-bottom:10px}
+  .m-prod .m-f:last-child{border-bottom:0}
+  @media(max-width:640px){
+    .acal-wrap{grid-template-columns:1fr}
+    .tabbar,#refresh,#cust-collapse,#guide-collapse,#rp-collapse{display:none!important}
+    .admin-bar-in{padding:10px 14px}
+    .wrap{padding:14px 14px 50px}
+    body.m-at-home #m-home{display:block}
+    body.m-at-home .wrap>section{display:none!important}
+    .m-top,.m-tools{display:flex}
+    .m-tools{gap:8px;flex-wrap:wrap;margin-bottom:10px}
+    section.m-in-det>*:not(.m-detail){display:none!important}
+    section.m-in-det>.m-detail{display:block}
+    section.m-card-det>*:not(.m-cardtop):not(.m-cardhost){display:none!important}
+    section.m-card-det>.m-cardtop{display:flex}
+    section.m-card-det .m-cardhost>*:not(.m-open){display:none!important}
+    .m-cardhost .cust{padding:12px 14px;margin-bottom:8px}
+    .m-cardhost .cust.collapsed .chead{position:relative;padding-right:20px;margin-bottom:0}
+    .m-cardhost .cust.collapsed .chead::after{content:'›';position:absolute;right:0;top:50%;transform:translateY(-50%);color:#C2A878;font-size:20px}
+    .m-cardhost .caret{display:none}
+    #tab-tx:not(.m-show-add) .formcard{display:none}
+    #tab-tx:not(.m-show-f) .filters>*:not(#tx-search){display:none}
+    #tab-tx .filters #tx-search{flex:1 1 100%}
+  }
+</style>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+</head>
+<body>
+<div id="rw-staging-banner" style="background:#FBE7CC;color:#5A4632;font-size:13px;line-height:1.6;text-align:center;padding:8px 14px;border-bottom:1px solid #ECDFC6;font-family:'Noto Sans TC','PingFang TC',sans-serif">⚠️ 這是<b>測試站</b>，只用來確認畫面。這裡連的是正式資料庫，請勿送出預約、付款、儲值或任何表單。　<a href="https://koarashi456-code.github.io/rainbowwhispers/" style="color:#6B4A33">前往正式站 →</a></div>
+
+<div id="login" class="login" style="display:none">
+  <div class="logo"></div>
+  <h1>後台管理</h1>
+  <p>彩之語 · 請登入</p>
+  <form id="login-form">
+    <input class="fld" id="email" type="email" placeholder="Email" autocomplete="username">
+    <input class="fld" id="password" type="password" placeholder="密碼" autocomplete="current-password">
+    <button class="login-btn" id="login-btn" type="submit">登入</button>
+    <div class="err" id="login-err"></div>
+  </form>
+</div>
+
+<div id="app" style="display:none">
+  <div class="admin-bar">
+    <div class="admin-bar-in">
+      <div class="admin-title">彩之語後台</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div class="bell-wrap">
+          <button class="bell" id="bell" title="通知" aria-label="通知">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+            <span class="bell-badge" id="bell-badge"></span>
+          </button>
+          <div class="npanel" id="npanel">
+            <div class="npanel-head"><b>通知</b><button class="rlink" id="n-readall">全部標為已讀</button></div>
+            <div class="nfilters" id="n-filters">
+              <button class="nchip on" data-nf="all">全部</button>
+              <button class="nchip" data-nf="quiz">測驗</button>
+              <button class="nchip" data-nf="member">會員・引路人</button>
+              <button class="nchip" data-nf="booking">預約</button>
+            </div>
+            <div id="nlist"></div>
+          </div>
+        </div>
+        <a class="abtn" href="index.html">回網站</a>
+        <button class="abtn" id="refresh">重新整理</button>
+        <button class="abtn" id="logout">登出</button>
+      </div>
+    </div>
+    <div class="tabbar">
+      <button data-tab="customers" class="on">客戶管理</button>
+      <button data-tab="guides">引路人管理</button>
+      <button data-tab="tx">交易紀錄</button>
+      <button data-tab="cal">行事曆</button>
+      <button data-tab="report">報表</button>
+      <button data-tab="shop">商品管理</button>
+      <button data-tab="trash">刪除紀錄</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <!-- 手機版首頁：條列選單（電腦版不顯示） -->
+    <div id="m-home"><div class="m-today" id="m-today"></div><div class="m-menu" id="m-menu"></div></div>
+
+    <!-- 行事曆：所有引路人的預約 -->
+    <section id="tab-cal" style="display:none">
+      <div class="acal-chips" id="acal-chips"></div>
+      <div class="acal-wrap">
+        <div class="acal-card">
+          <div class="acal-head"><button type="button" class="acal-nav" id="acal-prev" aria-label="上個月">‹</button><span id="acal-title"></span><button type="button" class="acal-nav" id="acal-next" aria-label="下個月">›</button></div>
+          <div class="acal-grid acal-wd"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+          <div class="acal-grid" id="acal-days"></div>
+          <div class="acal-legend" id="acal-legend"></div>
+        </div>
+        <div class="acal-card" id="acal-detail"></div>
+      </div>
+    </section>
+
+    <!-- 客戶管理 -->
+    <section id="tab-customers">
+      <div class="filters">
+        <input id="search" placeholder="搜尋　稱呼／聯絡／電話／地區／代碼／備註…">
+        <select id="f-source"><option value="">全部來源</option><option>測驗</option><option>會員</option></select>
+        <select id="f-status"><option value="">全部狀態</option></select>
+        <select id="f-type"><option value="">全部類型</option></select>
+      </div>
+      <div class="sec-head"><div class="count" id="count" style="margin:0"></div><button class="abtn" id="cust-collapse">全部展開</button></div>
+      <div id="list" class="m-cardhost"></div>
+    </section>
+
+    <!-- 引路人管理 -->
+    <section id="tab-guides" style="display:none">
+      <div class="filters">
+        <input id="g-search" placeholder="搜尋　姓名／信箱／電話／區域／服務…">
+        <select id="g-filter"><option value="">全部狀態</option><option>待申請</option><option>上架中</option><option>已停用</option></select>
+        <select id="g-region"><option value="">全部地區</option></select>
+        <select id="g-mode"><option value="">全部方式</option><option>線上</option><option>實體</option></select>
+      </div>
+      <div class="sec-head">
+        <div class="count" id="gcount" style="margin:0"></div>
+        <div style="display:flex;gap:8px"><button class="abtn" id="guide-collapse">全部展開</button><button class="addbtn" id="add-guide">＋ 新增引路人</button></div>
+      </div>
+      <div id="glist" class="m-cardhost"></div>
+    </section>
+
+    <!-- 交易紀錄 -->
+    <section id="tab-tx" style="display:none">
+      <div class="m-tools"><button type="button" class="abtn" id="m-txadd">＋ 新增交易／儲值</button><button type="button" class="abtn" id="m-txf">篩選</button></div>
+      <div class="formcard">
+        <h3>新增交易（消費／預約）</h3>
+        <div class="fgrid">
+          <label>客戶 *<span class="cbx"><input class="in cbx-input" id="tx-cust-q" placeholder="打字搜尋客戶…" autocomplete="off"><input type="hidden" id="tx-cust"><div class="cbx-pop" id="tx-cust-pop"></div></span></label>
+          <label>引路人<span class="cbx"><input class="in cbx-input" id="tx-guide-q" placeholder="打字搜尋引路人（可留空）" autocomplete="off"><input type="hidden" id="tx-guide"><div class="cbx-pop" id="tx-guide-pop"></div></span></label>
+          <label>項目<input class="in" id="tx-service" placeholder="例：塔羅 60 分"></label>
+          <label>預約／服務時間<span style="display:flex;gap:8px"><input class="in" id="tx-date" type="date" style="flex:1.3"><select class="in" id="tx-time" style="flex:1"></select></span></label>
+          <label>金額 *<input class="in" id="tx-amount" type="number" min="0" placeholder="0"></label>
+          <label>付款方式<select class="in" id="tx-method"><option>現金</option><option>刷卡</option><option>匯款</option><option>儲值</option></select></label>
+          <label>狀態<select class="in" id="tx-status"><option>已預約</option><option>已完成</option><option>未出席</option><option>已取消</option><option>已退費</option></select></label>
+          <label>備註<input class="in" id="tx-notes" placeholder="選填"></label>
+        </div>
+        <button class="addbtn" id="tx-add">新增交易</button>
+        <span class="saved" id="tx-msg" style="margin-left:10px"></span>
+      </div>
+
+      <div class="formcard">
+        <h3>新增儲值</h3>
+        <div class="fgrid">
+          <label>客戶 *<span class="cbx"><input class="in cbx-input" id="tp-cust-q" placeholder="打字搜尋客戶…" autocomplete="off"><input type="hidden" id="tp-cust"><div class="cbx-pop" id="tp-cust-pop"></div></span></label>
+          <label>日期<input class="in" id="tp-date" type="date"></label>
+          <label>金額 *<input class="in" id="tp-amount" type="number" min="0" max="20000" placeholder="0（上限 20,000）"></label>
+          <label>方式<select class="in" id="tp-method"><option>現金</option><option>刷卡</option><option>匯款</option></select></label>
+          <label>備註<input class="in" id="tp-notes" placeholder="選填"></label>
+        </div>
+        <button class="addbtn" id="tp-add">新增儲值</button>
+        <span class="saved" id="tp-msg" style="margin-left:10px"></span>
+      </div>
+
+      <div class="filters" style="align-items:center">
+        <span style="font-size:12px;color:var(--soft)">期間</span>
+        <input id="tx-ffrom" type="date" class="in-sm" style="flex:none">
+        <span style="color:var(--soft)">~</span>
+        <input id="tx-fto" type="date" class="in-sm" style="flex:none">
+        <select id="tx-ftype"><option value="">全部類型</option><option value="tx">預約</option><option value="topup">儲值</option></select>
+        <select id="tx-fstatus"><option value="">全部狀態</option><option>已預約</option><option>已完成</option><option>未出席</option><option>已取消</option><option>已退費</option></select>
+        <select id="tx-fmethod"><option value="">全部付款</option><option>現金</option><option>刷卡</option><option>匯款</option><option>儲值</option></select>
+        <select id="tx-fguide"><option value="">全部引路人</option></select>
+        <input id="tx-search" placeholder="搜尋 客戶／訂單編號／項目…" style="flex:1;min-width:150px">
+        <button class="abtn" id="tx-clear">清除</button>
+        <button class="abtn" id="tx-export">匯出 CSV</button>
+      </div>
+      <div class="count" id="txcount" style="margin:6px 2px 10px"></div>
+      <div id="txlist"></div>
+    </section>
+
+    <!-- 報表 -->
+    <section id="tab-report" style="display:none">
+      <div class="rp-filter">
+        <span class="rp-flabel">日期範圍</span>
+        <div class="rp-dates">
+          <input id="rp-from" type="date" class="in-sm">
+          <span style="color:var(--soft)">~</span>
+          <input id="rp-to" type="date" class="in-sm">
+        </div>
+        <button class="abtn" id="rp-clear">全部</button>
+      </div>
+      <div id="rp-summary"></div>
+      <div class="sec-head" style="margin:18px 0 10px"><h3 class="rp-h" style="margin:0">每位引路人業績</h3><span style="display:flex;gap:8px"><button class="abtn" id="rp-export">匯出 CSV</button><button class="abtn" id="rp-collapse">全部展開</button></span></div>
+      <div id="rp-guides"></div>
+    </section>
+
+    <!-- 刪除紀錄 -->
+    <section id="tab-shop" style="display:none">
+      <div class="shop-seg"><button type="button" class="on" data-shopv="items">商品清單</button><button type="button" data-shopv="orders">訂單明細 <span id="so-badge"></span></button></div>
+      <div id="shop-orders" style="display:none">
+        <div class="filters" style="align-items:center">
+          <select id="so-fstatus"><option value="">全部狀態</option><option value="已預約">待出貨</option><option>已出貨</option><option>已完成</option><option>已取消</option><option>已退費</option></select>
+          <input id="so-search" placeholder="搜尋 客戶／訂單編號／品項／收件資訊…" style="flex:1;min-width:150px">
+          <button class="abtn" id="so-export">匯出 CSV</button>
+        </div>
+        <div class="muted" id="so-count" style="font-size:12.5px;margin:6px 2px"></div>
+        <div id="so-list"></div>
+      </div>
+      <div id="shop-items">
+      <div class="muted" style="font-size:12.5px;margin:4px 2px 10px">商品頁（測試版）顯示「上架中」的商品；價格以這裡為準。商品訂單在「訂單明細」查看，不會混在交易紀錄裡。</div>
+      <div id="shoplist"></div>
+      <div class="sp-add-row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px">
+        <input class="in" id="sp-n" placeholder="商品名稱" style="flex:2;min-width:140px">
+        <input class="in" id="sp-p" type="number" min="0" placeholder="價格" style="width:100px">
+        <input class="in" id="sp-d" placeholder="簡短介紹（選填）" style="flex:3;min-width:180px">
+        <button class="addbtn" id="sp-addbtn" style="margin-top:0">新增商品</button>
+        <span id="sp-msg" style="font-size:12.5px;align-self:center"></span>
+      </div>
+      </div>
+    </section>
+
+    <section id="tab-trash" style="display:none">
+      <div class="count" id="trash-count"></div>
+      <div id="trashlist"></div>
+    </section>
+  </div>
+</div>
+
+<script src="supabase-config.js"></script>
+<script src="area.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+var db = supabase.createClient(window.SUPA.url, window.SUPA.key);
+var TYPES=['啟程者','尋光者','療心者','繫心者','破繭者','漫遊者'];
+var STATUSES=['新客','已加LINE','已諮詢','回頭客'];
+var ALL=[], GUIDES=[], TX=[], TOPUPS=[], GPLANS=[], DEL={customers:[],guides:[],transactions:[],topups:[]}, activeTab='customers';
+function $(s){return document.querySelector(s);}
+function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
+function fmtDate(s){if(!s)return '';var d=new Date(s);return (d.getMonth()+1)+'/'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+function fmtDay(s){if(!s)return '';var d=new Date(s);return (d.getMonth()+1)+'/'+d.getDate();}
+function fmtFull(s){if(!s)return '未定時間';var d=new Date(s);return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();}
+function hhmm(s){if(!s)return '';var d=new Date(s);return ' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+function wpart(s){var m=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(String(s||''));return m?{y:+m[1],mo:+m[2],d:+m[3],h:+m[4],mi:+m[5]}:null;}
+function fmtAppt(s){var p=wpart(s);return p?(p.mo+'/'+p.d+' '+String(p.h).padStart(2,'0')+':'+String(p.mi).padStart(2,'0')):'';}
+function fmtApptFull(s){var p=wpart(s);return p?(p.y+'/'+p.mo+'/'+p.d+' '+String(p.h).padStart(2,'0')+':'+String(p.mi).padStart(2,'0')):'';}
+function money(n){return '$'+Number(n||0).toLocaleString();}
+// 客戶的各項測驗結果（test_results：{測驗名稱:{result,topic,at}}；舊資料退回 result_type/topic）
+function testResultsHtml(c){
+  var tr=c.test_results||{}, keys=['心靈導航測驗','七大脈輪測驗','生命靈數'].filter(function(k){ return tr[k]; });
+  Object.keys(tr).forEach(function(k){ if(keys.indexOf(k)<0) keys.push(k); });
+  if(!keys.length) return '測驗 '+esc(c.result_type||'—')+(c.topic?'（'+esc(c.topic)+'）':'');
+  return keys.map(function(k){ var x=tr[k]||{}; var extra=(k==='心靈導航測驗'&&x.topic)?'（'+esc(x.topic)+'）':''; return esc(k.replace('測驗',''))+' <b style="color:var(--brush);font-weight:500">'+esc(x.result||'—')+'</b>'+extra+(x.at?' <span style="font-size:11px">'+esc(x.at)+'</span>':''); }).join('　·　');
+}
+// 客人做測驗時選的配對條件（地區／預算／方式），取最近一次
+function prefsHtml(c){
+  var tr=c.test_results||{}, best=null;
+  Object.keys(tr).forEach(function(k){ var x=tr[k]||{}; if(x.prefs && (!best || String(x.at||'')>=String(best.at||''))) best=x; });
+  if(!best) return '';
+  var p=best.prefs; return '<div style="font-size:12.5px;color:var(--soft);margin:-4px 0 8px">配對條件：<b style="color:var(--brush);font-weight:500">'+esc([p.area,p.budget,p.mode].filter(Boolean).join('・'))+'</b></div>';
+}
+// 後台自訂稱呼（只有後台看得到）：顯示「稱呼（客人本人填的名字）」，客人改名字括號會跟著變
+function adName(c){ var al=String(c.admin_alias||'').trim(), nm=String(c.name||'').trim(); return al&&al!==nm ? esc(al)+'<span class="a-orig">（'+(nm?esc(nm):'未填姓名')+'）</span>' : (nm?esc(nm):'(未填姓名)'); }
+function custLabel(c){return c.name || c.contact || (c.ref_code?('代碼'+c.ref_code):'') || '(無名客戶)';}
+function guideLabel(g){return g.name || '(未命名引路人)';}
+function custById(id){return ALL.find(function(x){return x.id===id;});}
+function guideById(id){return GUIDES.find(function(x){return x.id===id;});}
+
+STATUSES.forEach(function(s){$('#f-status').insertAdjacentHTML('beforeend','<option>'+s+'</option>');});
+TYPES.forEach(function(t){$('#f-type').insertAdjacentHTML('beforeend','<option>'+t+'</option>');});
+
+function showLogin(){$('#login').style.display='block';$('#app').style.display='none';}
+function showApp(){$('#login').style.display='none';$('#app').style.display='block';}
+
+async function init(){
+  var r=await db.auth.getSession();
+  if(r.data && r.data.session){ showApp(); loadAll(); } else { showLogin(); }
+}
+$('#login-form').onsubmit=async function(e){
+  e.preventDefault();
+  var email=$('#email').value.trim(), pw=$('#password').value;
+  var btn=$('#login-btn'); btn.disabled=true; btn.textContent='登入中…';
+  var r=await db.auth.signInWithPassword({email:email,password:pw});
+  btn.disabled=false; btn.textContent='登入';
+  if(r.error){ $('#login-err').textContent='登入失敗：'+r.error.message; return; }
+  $('#login-err').textContent=''; showApp(); loadAll();
+};
+$('#logout').onclick=async function(){ await db.auth.signOut(); showLogin(); };
+$('#refresh').onclick=function(){ loadAll(); };
+
+document.querySelectorAll('.tabbar button').forEach(function(b){
+  b.onclick=function(){
+    var t=b.getAttribute('data-tab'); activeTab=t;
+    mLeaveDetails(); document.body.classList.remove('m-at-home');
+    ['customers','guides','tx','cal','report','shop','trash'].forEach(function(x){
+      document.getElementById('tab-'+x).style.display=(x===t?'block':'none');
+      document.querySelector('.tabbar [data-tab="'+x+'"]').classList.toggle('on',x===t);
+    });
+    if(t==='report') renderReport();
+    if(t==='trash') renderTrash();
+    if(t==='shop') loadShop();
+    if(t==='cal') renderCal(true);
+    if(isM()) window.scrollTo(0,0);
+  };
+});
+
+async function loadAll(){
+  try{ await db.rpc('auto_complete_orders'); }catch(e){}  // 預約日已過的「已預約」自動改「已完成」（未建 SQL 時略過）
+  if(!seenTs()) setSeen(new Date().toISOString());
+  $('#list').innerHTML='<div class="muted" style="padding:24px;text-align:center">載入中…</div>';
+  var res=await Promise.all([
+    db.from('customers').select('*').order('created_at',{ascending:false}),
+    db.from('guides').select('*').order('created_at',{ascending:false}),
+    db.from('transactions').select('*').order('created_at',{ascending:false}),
+    db.from('topups').select('*').order('created_at',{ascending:false}),
+    db.from('guide_plans').select('*').order('created_at',{ascending:false})
+  ]);
+  var nd=function(x){return !x.deleted;}, dd=function(x){return x.deleted;};
+  var C=res[0].data||[], G=res[1].data||[], T=res[2].data||[], P=res[3].data||[];
+  GPLANS=((res[4]&&res[4].data)||[]).filter(function(x){return !x.deleted;});
+  ALL=C.filter(nd); GUIDES=G.filter(nd); TX=T.filter(nd); TOPUPS=P.filter(nd);
+  DEL={customers:C.filter(dd),guides:G.filter(dd),transactions:T.filter(dd),topups:P.filter(dd)};
+  var err=res.slice(0,4).find(function(x){return x.error;});
+  if(err){ $('#list').innerHTML='<div class="muted">讀取失敗：'+esc(err.error.message)+'（三張新表若尚未建立，請先跑建表 SQL）</div>'; }
+  fillSelects();
+  try{ if(!$('#tp-date').value) $('#tp-date').value=new Date().toISOString().slice(0,10); }catch(e){}
+  CAL_SLOTS=null;
+  render(); renderGuides(); renderTx(); renderReport(); renderTrash(); renderShopOrders();
+  if(activeTab==='cal') renderCal(true);
+  buildNotifs(ALL,GUIDES,TX); startNotifPoll();
+}
+
+/* ===== 金額彙總 ===== */
+function custAgg(cid){
+  var topup=0, used=0, spent=0;
+  TOPUPS.forEach(function(t){ if(t.customer_id===cid) topup+=Number(t.amount||0); });
+  TX.forEach(function(t){
+    if(t.customer_id!==cid) return;
+    if(t.status==='已取消'||t.status==='已退費') return;
+    spent+=Number(t.amount||0);
+    if(t.method==='儲值') used+=Number(t.amount||0);
+  });
+  return {balance:topup-used, spent:spent, topup:topup};
+}
+
+/* ===== 客戶管理 ===== */
+function render(){
+  var q=$('#search').value.trim().toLowerCase();
+  var fs=$('#f-status').value, ft=$('#f-type').value, fsrc=$('#f-source').value;
+  var rows=ALL.filter(function(c){
+    if(fs && c.status!==fs) return false;
+    if(ft){ var nav=((c.test_results||{})['心靈導航測驗']||{}).result; if(nav!==ft && c.result_type!==ft) return false; }
+    if(fsrc && (c.source||'測驗')!==fsrc) return false;
+    if(q){ var hay=[c.ref_code,c.admin_alias,c.name,c.contact,c.phone,c.area,c.notes,c.topic,c.result_type,JSON.stringify(c.test_results||{}),(c.tags||[]).join(' ')].join(' ').toLowerCase(); if(hay.indexOf(q)<0) return false; }
+    return true;
+  });
+  $('#count').textContent='共 '+ALL.length+' 位，顯示 '+rows.length+' 位';
+  if(!rows.length){ $('#list').innerHTML='<div class="muted" style="padding:30px;text-align:center">沒有符合的客戶</div>'; return; }
+  $('#list').innerHTML=rows.map(card).join('');
+  bindCards();
+}
+function customerRecords(cid){
+  var txs=TX.filter(function(t){return t.customer_id===cid;});
+  var tps=TOPUPS.filter(function(t){return t.customer_id===cid;});
+  if(!txs.length && !tps.length) return '<div class="muted" style="padding:6px 0">尚無消費／儲值紀錄</div>';
+  var h='';
+  txs.forEach(function(t){ h+='<div class="rec"><span><small>'+(t.appointment_at?fmtAppt(t.appointment_at):'未定時間')+'</small>　消費　'+esc(t.service||'—')+'　<small>'+esc(guideName(t.guide_id))+(t.method?' · '+esc(t.method):'')+(t.order_ref?' · '+esc(t.order_ref):'')+'</small></span><span>'+money(t.amount)+'　'+statusBadge(t.status)+'<button class="recdel" data-deltx="'+t.id+'" title="刪除">✕</button></span></div>'; });
+  tps.forEach(function(t){ h+='<div class="rec"><span><small>'+fmtDay(t.created_at)+'</small>　儲值　<small>'+esc(t.method||'')+'</small></span><span style="color:#3F7A5E">+'+money(t.amount)+'<button class="recdel" data-deltp="'+t.id+'" title="刪除">✕</button></span></div>'; });
+  return h;
+}
+function card(c){
+  var a=custAgg(c.id);
+  return '<div class="cust collapsed" data-id="'+c.id+'">'+
+    '<div class="cust-top chead">'+
+      '<div><span class="caret">▾</span> <b class="a-dname">'+adName(c)+'</b><button type="button" class="a-edit" data-aedit title="修改稱呼（只有後台看得到）" aria-label="修改稱呼">✎</button> <span class="src-badge '+(c.source==='會員'?'src-m':'src-q')+'">'+(c.source==='會員'?'會員':'非會員')+'</span> <small style="color:var(--soft)">'+esc(c.contact||'')+'</small></div>'+
+      '<div class="meta">'+fmtDate(c.created_at)+'</div>'+
+    '</div>'+
+    '<div class="cbody">'+
+    '<div style="font-size:12.5px;color:var(--soft);margin-bottom:8px;line-height:1.8">'+testResultsHtml(c)+'　·　代碼 '+esc(c.ref_code||'—')+'</div>'+prefsHtml(c)+
+    '<div class="summary"><span>餘額 <b>'+money(a.balance)+'</b></span><span>累積消費 <b>'+money(a.spent)+'</b></span><span>儲值 <b>'+money(a.topup)+'</b></span><button class="rlink" data-rec>查看紀錄</button></div>'+
+    '<div class="records" data-recbox style="display:none">'+customerRecords(c.id)+'</div>'+
+    '<div class="cust-grid">'+
+      '<label>姓名（客人本人資料）<input class="in" data-f="name" value="'+esc(c.name)+'" placeholder="—"></label>'+
+      '<label>聯絡（LINE／電話）<input class="in" data-f="contact" value="'+esc(c.contact)+'" placeholder="—"></label>'+
+      '<label>狀態<select class="in" data-f="status">'+STATUSES.map(function(s){return '<option'+(c.status===s?' selected':'')+'>'+s+'</option>';}).join('')+'</select></label>'+
+      '<label>標籤（逗號分隔）<input class="in" data-f="tags" value="'+esc((c.tags||[]).join(', '))+'" placeholder="例：高意願, 感情"></label>'+
+      '<label>手機<input class="in" data-f="phone" value="'+esc(c.phone)+'" placeholder="—"></label>'+
+      '<label>地區<input class="in" data-f="area" value="'+esc(c.area)+'" placeholder="—"></label>'+
+    '</div>'+
+    '<label class="notes-l">備註<textarea class="in" data-f="notes" placeholder="記點什麼…">'+esc(c.notes)+'</textarea></label>'+
+    '<div class="cust-actions"><label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--soft);margin-right:auto;cursor:pointer"><input type="checkbox" data-f="is_paid" '+(c.is_paid?'checked':'')+'> 付費會員（開啟後，該會員的會員中心會顯示優惠）</label><span class="saved" data-saved></span><button class="del" data-del>刪除</button></div>'+
+    '</div>'+
+  '</div>';
+}
+function bindCards(){
+  document.querySelectorAll('#list .cust').forEach(function(el){
+    var id=el.getAttribute('data-id');
+    var rb=el.querySelector('[data-rec]'); if(rb) rb.onclick=function(){ var box=el.querySelector('[data-recbox]'); box.style.display=(box.style.display==='none'?'block':'none'); };
+    el.querySelectorAll('[data-deltp]').forEach(function(btn){ btn.onclick=async function(){ if(!confirm('刪除這筆儲值？會移到「刪除紀錄」可還原；餘額會重算。'))return; var tid=btn.getAttribute('data-deltp'); if(await softDelete('topups',tid,TOPUPS)){ render(); renderTx(); renderTrash(); } }; });
+    el.querySelectorAll('[data-deltx]').forEach(function(btn){ btn.onclick=async function(){ if(!confirm('刪除這筆消費紀錄？會移到「刪除紀錄」，可還原。'))return; var tid=btn.getAttribute('data-deltx'); if(await softDelete('transactions',tid,TX)){ render(); renderTx(); renderTrash(); } }; });
+    el.querySelectorAll('[data-f]').forEach(function(inp){
+      inp.addEventListener('change',async function(){
+        var f=inp.getAttribute('data-f'), val=(inp.type==='checkbox'?inp.checked:inp.value);
+        if(f==='tags'){ val=val.split(/[,，、]/).map(function(s){return s.trim();}).filter(Boolean); }
+        var patch={}; patch[f]=val;
+        var s=el.querySelector('[data-saved]'); s.textContent='儲存中…'; s.style.color='var(--soft)';
+        var r=await db.from('customers').update(patch).eq('id',id);
+        if(r.error){ s.textContent='存檔失敗'; s.style.color='#C0506A'; }
+        else{ s.textContent='已儲存'; s.style.color='#4F8E6E'; var c=custById(id); if(c)c[f]=val; if(f==='name'&&c){ var dn=el.querySelector('.a-dname'); if(dn) dn.innerHTML=adName(c); } setTimeout(function(){s.textContent='';},1400); }
+      });
+    });
+    var eb=el.querySelector('[data-aedit]');
+    if(eb) eb.onclick=function(e){
+      e.stopPropagation(); if(el.querySelector('.a-alias')) return;
+      var c=custById(id); if(!c) return;
+      var dn=el.querySelector('.a-dname'), old=String(c.admin_alias||''), orig=String(c.name||'');
+      var al=document.createElement('input'); al.className='a-alias'; al.maxLength=30; al.value=old||orig; al.placeholder=orig||'稱呼';
+      dn.style.display='none'; eb.style.display='none'; dn.parentNode.insertBefore(al,dn); al.focus(); al.select();
+      var done=false;
+      var close=function(){ al.remove(); dn.style.display=''; eb.style.display=''; };
+      al.addEventListener('keydown',function(ev){
+        if(ev.key==='Enter'&&!ev.isComposing){ ev.preventDefault(); al.blur(); }
+        else if(ev.key==='Escape'){ done=true; close(); }
+      });
+      al.addEventListener('blur',async function(){
+        if(done) return; done=true;
+        var v=al.value.trim().slice(0,30); if(v===orig.trim()) v='';
+        if(v===old){ close(); return; }
+        var s=el.querySelector('[data-saved]'); s.textContent='儲存中…'; s.style.color='var(--soft)';
+        var r=await db.from('customers').update({admin_alias:v||null}).eq('id',id);
+        if(r.error){ s.textContent='存檔失敗'+(/admin_alias/.test(r.error.message||'')?'（請先執行 SQL）':''); s.style.color='#C0506A'; }
+        else{ c.admin_alias=v||null; dn.innerHTML=adName(c); s.textContent='稱呼已儲存'; s.style.color='#4F8E6E'; setTimeout(function(){s.textContent='';},1400); }
+        close();
+      });
+    };
+    el.querySelector('[data-del]').onclick=async function(){
+      if(!confirm('刪除這位客戶？會移到「刪除紀錄」，可還原。'))return;
+      if(await softDelete('customers',id,ALL)){ render(); renderTrash(); }
+    };
+  });
+}
+['search','f-source','f-status','f-type'].forEach(function(id){ var e=document.getElementById(id); e.addEventListener('input',render); e.addEventListener('change',render); });
+
+/* ===== 引路人管理 ===== */
+function guideName(id){ var g=guideById(id); return g?guideLabel(g):(id?'(已刪引路人)':'—'); }
+function guideState(g){ return g.pending?'待申請':(g.active?'上架中':'已停用'); }
+function guideBadge(g){ if(g.pending) return '<span class="src-badge" style="background:#FBE7CC;color:#A5643A">待申請</span>'; if(!g.active) return '<span class="src-badge" style="background:#EDE6DC;color:#8A7659">已停用</span>'; return '<span class="src-badge" style="background:#D8ECDF;color:#3F7A5E">上架中</span>'; }
+function renderGuides(){
+  var f=($('#g-filter')||{}).value||'';
+  var q=(($('#g-search')||{}).value||'').trim().toLowerCase();
+  var reg=($('#g-region')||{}).value||'';
+  var mode=($('#g-mode')||{}).value||'';
+  // 地區下拉：用現有引路人的區域動態帶入（保留目前選擇）
+  var rsel=$('#g-region');
+  if(rsel){ var cur=rsel.value; var regs=GUIDES.map(function(g){return g.region;}).filter(Boolean).filter(function(v,i,a){return a.indexOf(v)===i;}).sort(); rsel.innerHTML='<option value="">全部地區</option>'+regs.map(function(r){return '<option'+(r===cur?' selected':'')+'>'+esc(r)+'</option>';}).join(''); rsel.value=cur; }
+  var rows=GUIDES.filter(function(g){
+    if(f && guideState(g)!==f) return false;
+    if(reg && (g.region||'')!==reg) return false;
+    if(mode && (g.service_mode||'').indexOf(mode)<0) return false;
+    if(q){ var hay=[g.name,g.email,g.phone,g.region,g.service_mode,(g.services||[]).join(' '),g.notes].join(' ').toLowerCase(); if(hay.indexOf(q)<0) return false; }
+    return true;
+  });
+  var pend=GUIDES.filter(function(g){return g.pending;}).length;
+  $('#gcount').textContent='共 '+GUIDES.length+' 位'+(pend?'　·　待申請 '+pend+' 位':'');
+  if(!rows.length){ $('#glist').innerHTML='<div class="muted" style="padding:30px;text-align:center">'+(GUIDES.length?'沒有符合的引路人':'還沒有引路人。按右上角「＋ 新增引路人」建立第一位。')+'</div>'; return; }
+  $('#glist').innerHTML=rows.map(guideCard).join('');
+  bindGuides();
+}
+function guideCard(g){
+  return '<div class="cust collapsed" data-id="'+g.id+'">'+
+    '<div class="chead"><span class="caret">▾</span> <b style="color:var(--brush)">'+esc(g.name||'(未命名引路人)')+'</b> '+guideBadge(g)+'</div>'+
+    '<div class="cbody">'+
+    guidePhotoHtml(g)+
+    '<div class="cust-grid">'+
+      '<label>姓名<input class="in" data-f="name" value="'+esc(g.name)+'" placeholder="引路人姓名"></label>'+
+      '<label>電話<input class="in" data-f="phone" value="'+esc(g.phone)+'" placeholder="09__ ___ ___"></label>'+
+      '<label>信箱<input class="in" data-f="email" value="'+esc(g.email)+'" placeholder="you@mail.com"></label>'+
+      '<label>服務方式<input class="in" data-f="service_mode" value="'+esc(g.service_mode)+'" placeholder="線上／實體"></label>'+
+      '<label>粉絲專頁<input class="in" data-f="fanpage" value="'+esc(g.fanpage)+'" placeholder="FB／IG 連結"></label>'+
+    '</div>'+
+    '<div class="notes-l" style="font-size:11.5px;color:var(--soft)">服務區域（公開顯示；實體服務的地區，可以選好幾個）<div data-garea style="margin-top:5px"></div><input type="hidden" data-f="region" value="'+esc(g.region)+'"></div>'+
+    '<label class="notes-l">完整地址（不公開，預約成功後才給客戶）<input class="in" data-f="address" value="'+esc(g.address)+'" placeholder="完整地址（線上可留空）"></label>'+
+    '<label class="notes-l">服務項目（逗號分隔）<input class="in" data-f="services" value="'+esc((g.services||[]).join(', '))+'" placeholder="例：塔羅, 占星, 八字"></label>'+
+    '<label class="notes-l">自我介紹／經歷（公開顯示在引路人頁）<textarea class="in" data-f="notes" rows="5" placeholder="例：我是 XUAN，接觸彩虹卡 5 年，擅長陪你把卡住的感受說清楚…">'+esc(g.notes)+'</textarea></label>'+
+    '<label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:12.5px;cursor:pointer;color:'+(g.portal_enabled?'#4F8E6E':'var(--soft)')+';font-weight:'+(g.portal_enabled?'500':'400')+'"><input type="checkbox" data-f="portal_enabled" '+(g.portal_enabled?'checked':'')+'> 開通引路人後台（用登記信箱 '+esc(g.email||'（未填信箱）')+' 登入，看自己的預約與會員）</label>'+
+    guidePlansHtml(g)+
+    '<div class="gslots" data-gslots style="margin-top:14px;border:1px solid var(--line);border-radius:12px;padding:10px 13px;background:#FBF6EC">'+
+      '<div style="font-size:12.5px;color:var(--soft);font-weight:500;margin-bottom:6px">可預約時間（引路人自己設定，客戶只能從這些時段預約）</div>'+
+      (g.availability ? '<div data-gs-legacy style="font-size:12px;color:var(--soft);background:#fff;border:1px dashed var(--line);border-radius:10px;padding:6px 10px;margin-bottom:8px">舊的文字說明：「'+esc(g.availability)+'」（客戶頁只在沒有開放時段時顯示）<button type="button" class="del" data-gs-clear style="margin-left:6px">清除</button></div>' : '')+
+      '<div data-gslots-body style="color:var(--soft);font-size:12.5px">展開後載入…</div>'+
+      '<div data-gs-add style="display:none;margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)">'+
+        '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px"><span style="font-size:12.5px;color:var(--soft)">選日期</span><input type="date" data-gs-date class="in" style="width:auto;padding:6px 10px"><span style="font-size:12px;color:var(--soft)">再點要開放的時段（可複選）</span></div>'+
+        '<div class="gs-chips" data-gs-times></div>'+
+        '<div style="display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap"><button type="button" class="del" data-gs-addbtn style="flex:none;white-space:nowrap;color:#4A3A2A;background:var(--rainbow);text-decoration:none;border-radius:999px;padding:7px 16px">新增時段</button><span data-gs-msg style="font-size:12px;min-width:0;overflow-wrap:anywhere"></span></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="cust-actions">'+
+      (g.pending
+        ? '<label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#4F8E6E;margin-right:auto;cursor:pointer;font-weight:500"><input type="checkbox" data-approve> 核准上架（勾選後上架）</label>'
+        : '<label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--soft);margin-right:auto;cursor:pointer"><input type="checkbox" data-f="active" '+(g.active?'checked':'')+'> 啟用中</label>')+
+      '<span class="saved" data-saved></span><button class="del" data-del>刪除</button>'+
+    '</div>'+
+    '</div>'+
+  '</div>';
+}
+function guidePlansHtml(g){
+  var mine=GPLANS.filter(function(p){return p.guide_id===g.id;});
+  var list = mine.length ? mine.map(function(p){
+    return '<div class="gp-row" data-pid="'+p.id+'" style="display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line)">'+
+      '<div style="flex:1;min-width:0;font-size:13.5px">'+esc(p.label)+(p.unit?(' <span style="color:var(--soft);font-size:12px">· '+esc(p.unit)+'</span>'):'')+' <span style="color:var(--soft)">｜$'+Number(p.price||0).toLocaleString()+'</span></div>'+
+      '<label style="display:flex;align-items:center;gap:5px;font-size:12.5px;cursor:pointer;color:'+(p.approved?'#4F8E6E':'#B07A2E')+';white-space:nowrap"><input type="checkbox" data-pappr '+(p.approved?'checked':'')+'> '+(p.approved?'已核准':'核准')+'</label>'+
+      '<button class="del" data-pdel>刪除</button>'+
+    '</div>';
+  }).join('') : '<div style="color:var(--soft);font-size:12.5px;padding:7px 0">尚無自訂方案（客戶預約頁會顯示預設方案）</div>';
+  return '<div class="gplans" style="margin-top:14px;border:1px solid var(--line);border-radius:12px;padding:10px 13px;background:#FBF6EC">'+
+    '<div style="font-size:12.5px;color:var(--soft);font-weight:500;margin-bottom:2px">方案審核（核准後才會出現在客戶預約頁）</div>'+
+    list+
+    '<div style="display:flex;gap:7px;margin-top:10px;flex-wrap:wrap;align-items:center">'+
+      '<input class="in gp-nl" placeholder="方案名稱" style="flex:1;min-width:120px">'+
+      '<input class="in gp-np" type="number" min="0" placeholder="價格" style="width:84px">'+
+      '<input class="in gp-nu" placeholder="時數/次數 如2小時" style="width:120px">'+
+      '<button class="del gp-add" style="color:#4A3A2A;background:var(--rainbow);text-decoration:none;border-radius:999px;padding:7px 15px">新增並核准</button>'+
+    '</div>'+
+  '</div>';
+}
+function bindGuidePlans(el){
+  var id=el.getAttribute('data-id');
+  el.querySelectorAll('.gp-row').forEach(function(row){
+    var pid=row.getAttribute('data-pid');
+    var ap=row.querySelector('[data-pappr]');
+    if(ap) ap.onchange=async function(){ var v=ap.checked; var r=await db.from('guide_plans').update({approved:v}).eq('id',pid); if(r.error){ alert('更新失敗：'+r.error.message); ap.checked=!v; return; } var p=GPLANS.find(function(x){return x.id===pid;}); if(p)p.approved=v; var lab=ap.parentNode; lab.style.color=v?'#4F8E6E':'#B07A2E'; if(ap.nextSibling) ap.nextSibling.textContent=' '+(v?'已核准':'核准'); };
+    var pd=row.querySelector('[data-pdel]');
+    if(pd) pd.onclick=async function(){ if(!confirm('刪除這個方案？'))return; var r=await db.from('guide_plans').update({deleted:true}).eq('id',pid); if(r.error){ alert('刪除失敗：'+r.error.message); return; } GPLANS=GPLANS.filter(function(x){return x.id!==pid;}); var g=guideById(id); var box=el.querySelector('.gplans'); if(g&&box){ box.outerHTML=guidePlansHtml(g); bindGuidePlans(el); } };
+  });
+  var addb=el.querySelector('.gp-add');
+  if(addb) addb.onclick=async function(){
+    var nl=el.querySelector('.gp-nl'), np=el.querySelector('.gp-np'), nu=el.querySelector('.gp-nu');
+    var label=(nl&&nl.value||'').trim(), price=Number(np&&np.value||0), unit=(nu&&nu.value||'').trim();
+    if(!label){ alert('請填方案名稱'); return; }
+    var r=await db.from('guide_plans').insert({guide_id:id,label:label,price:price,unit:unit||null,approved:true}).select();
+    if(r.error){ alert('新增失敗：'+r.error.message); return; }
+    if(r.data&&r.data[0]) GPLANS.unshift(r.data[0]);
+    var g=guideById(id); var box=el.querySelector('.gplans'); if(g&&box){ box.outerHTML=guidePlansHtml(g); bindGuidePlans(el); }
+  };
+}
+// 引路人可預約時段：後台可直接點選新增／刪除（同引路人後台「我的開放時間」：選日期＋點半小時時段）
+// 需 SQL：admin_guide_slots(p_guide_id) / admin_add_guide_slots(p_guide_id,p_slots) / admin_del_guide_slot(p_guide_id,p_id)
+// 函式還沒建立時退回公開 RPC guide_open_slots 唯讀顯示
+function gsP2(n){ return (n<10?'0':'')+n; }
+function gsToday(){ var t=new Date(); return t.getFullYear()+'-'+gsP2(t.getMonth()+1)+'-'+gsP2(t.getDate()); }
+async function fetchGuideSlots(id){
+  var r=await db.rpc('admin_guide_slots',{p_guide_id:id});
+  if(!r.error) return {rows:Array.isArray(r.data)?r.data:[], editable:true};
+  var missing=r.error.code==='PGRST202' || /could not find the function/i.test(r.error.message||'');
+  if(!missing) throw new Error(r.error.message);
+  var r2=await db.rpc('guide_open_slots',{p_guide_id:id});
+  if(r2.error) throw new Error(r2.error.message);
+  return {rows:Array.isArray(r2.data)?r2.data:[], editable:false};
+}
+async function loadGuideSlots(el,id){
+  var box=el.querySelector('[data-gslots-body]'), add=el.querySelector('[data-gs-add]'); if(!box) return;
+  if(!box.innerHTML || box.textContent==='展開後載入…') box.textContent='載入中…';
+  var res; try{ res=await fetchGuideSlots(id); }catch(e){ box.textContent='讀取失敗：'+(e.message||'')+'（收合再展開可重試）'; el._slotsLoaded=false; return; }
+  var rows=res.rows;
+  el._gsTaken={}; el._gsHave={};
+  var WD=['日','一','二','三','四','五','六'], byDate={}, order=[], taken=0;
+  rows.forEach(function(s){ var p=wpart(s.slot_at); if(!p) return; var dk=p.y+'-'+gsP2(p.mo)+'-'+gsP2(p.d), t=gsP2(p.h)+':'+gsP2(p.mi);
+    if(!byDate[dk]){ byDate[dk]=[]; order.push({k:dk,p:p}); }
+    if(s.taken) taken++;
+    el._gsHave[dk+'T'+t]=true;
+    byDate[dk].push({id:s.id, t:t, taken:!!s.taken}); });
+  order.sort(function(x,y){ return x.k<y.k?-1:x.k>y.k?1:0; });
+  var h='';
+  if(!rows.length){ h='<div>引路人尚未設定開放時段'+(res.editable?'，可在下方直接點選新增':'')+'（沒有時段時，客戶預約頁會改用自填日期時間）</div>'; }
+  else{
+    h='<div style="margin-bottom:4px">可約 '+(rows.length-taken)+' 個　·　已被約 '+taken+' 個</div>';
+    order.forEach(function(o){
+      var w=WD[new Date(o.p.y,o.p.mo-1,o.p.d).getDay()];
+      byDate[o.k].sort(function(x,y){ return x.t<y.t?-1:1; });
+      h+='<div class="gs-d">'+o.p.mo+'/'+o.p.d+'（'+w+'）</div><div class="gs-row">';
+      byDate[o.k].forEach(function(s){
+        if(s.taken) h+='<span class="gs-pill booked">'+s.t+'<span class="gs-bk">已約</span></span>';
+        else h+='<span class="gs-pill">'+s.t+(res.editable&&s.id?'<span class="gs-rm" data-gs-rm="'+esc(s.id)+'" title="刪除這個時段">&times;</span>':'')+'</span>';
+      });
+      h+='</div>';
+    });
+  }
+  if(!res.editable) h+='<div style="margin-top:8px;color:#B07A2E">⚠️ 後台點選新增／刪除時段需先在 Supabase 加上後台時段函式（SQL），目前只能檢視。</div>';
+  box.innerHTML=h;
+  box.querySelectorAll('[data-gs-rm]').forEach(function(x){ x.onclick=async function(){
+    if(!confirm('刪除這個開放時段？')) return;
+    var r=await db.rpc('admin_del_guide_slot',{p_guide_id:id, p_id:x.getAttribute('data-gs-rm')});
+    if(r.error){ alert('刪除失敗：'+r.error.message); return; }
+    if(r.data===false) alert('找不到這個時段（可能已被刪除），已重新整理');
+    loadGuideSlots(el,id);
+  }; });
+  if(add){ add.style.display=res.editable?'block':'none'; if(res.editable) setupGuideSlotAdd(el,id); }
+}
+function drawGuideSlotTimes(el){
+  var times=el.querySelector('[data-gs-times]'), dIn=el.querySelector('[data-gs-date]'); if(!times||!dIn) return;
+  var d=dIn.value, picked={};
+  times.querySelectorAll('.gs-chip.on').forEach(function(c){ picked[c.getAttribute('data-t')]=true; });
+  var h=''; for(var hh=8;hh<23;hh++){ for(var mm=0;mm<60;mm+=30){ var v=gsP2(hh)+':'+gsP2(mm);
+    if(el._gsHave && el._gsHave[d+'T'+v]) h+='<span class="gs-chip has" title="已開放">'+v+'</span>';
+    else h+='<span class="gs-chip'+(picked[v]?' on':'')+'" data-t="'+v+'">'+v+'</span>'; } }
+  times.innerHTML=h;
+  times.querySelectorAll('.gs-chip[data-t]').forEach(function(c){ c.onclick=function(){ c.classList.toggle('on'); }; });
+}
+function bindGuideLegacy(el,id){
+  var clr=el.querySelector('[data-gs-clear]');
+  if(clr) clr.onclick=async function(){
+    if(!confirm('清除這段舊的文字說明？（只影響文字，不會動到開放時段）')) return;
+    var r=await db.from('guides').update({availability:null}).eq('id',id);
+    if(r.error){ alert('清除失敗：'+r.error.message); return; }
+    var g=guideById(id); if(g) g.availability=null;
+    var lg=el.querySelector('[data-gs-legacy]'); if(lg) lg.remove();
+  };
+}
+function setupGuideSlotAdd(el,id){
+  var dIn=el.querySelector('[data-gs-date]'), btn=el.querySelector('[data-gs-addbtn]'), msg=el.querySelector('[data-gs-msg]');
+  if(!dIn||!btn) return;
+  if(!dIn.value){ dIn.value=gsToday(); }
+  dIn.min=gsToday();
+  dIn.onchange=function(){ var times=el.querySelector('[data-gs-times]'); if(times) times.querySelectorAll('.gs-chip.on').forEach(function(c){ c.classList.remove('on'); }); drawGuideSlotTimes(el); };
+  drawGuideSlotTimes(el);
+  function setMsg(t,c){ if(!msg) return; msg.textContent=t; msg.style.color=c; if(c!=='#C0506A') setTimeout(function(){ if(msg.textContent===t) msg.textContent=''; },2200); }
+  btn.onclick=async function(){
+    var d=dIn.value; if(!d){ setMsg('請先選日期','#C0506A'); return; }
+    if(d<gsToday()){ setMsg('不能選今天以前的日期','#C0506A'); return; }
+    var picked=Array.prototype.map.call(el.querySelectorAll('[data-gs-times] .gs-chip.on'),function(c){ return c.getAttribute('data-t'); });
+    if(!picked.length){ setMsg('請點選要開放的時段','#C0506A'); return; }
+    btn.disabled=true; setMsg('新增中…','var(--soft)');
+    var r=await db.rpc('admin_add_guide_slots',{p_guide_id:id, p_slots:picked.map(function(t){ return d+'T'+t; })});
+    btn.disabled=false;
+    if(r.error){ setMsg('新增失敗：'+r.error.message,'#C0506A'); return; }
+    el.querySelectorAll('[data-gs-times] .gs-chip.on').forEach(function(c){ c.classList.remove('on'); });
+    setMsg('已新增 '+(r.data||0)+' 個時段','#4F8E6E');
+    loadGuideSlots(el,id);
+  };
+}
+function ensureGuideSlots(el){ if(!el.classList.contains('collapsed') && !el._slotsLoaded){ el._slotsLoaded=true; loadGuideSlots(el,el.getAttribute('data-id')); } }
+// 卡片展開（點標題、全部展開、新增後自動展開）時才載入時段
+(function(){ var gl=document.getElementById('glist'); if(gl && window.MutationObserver) new MutationObserver(function(ms){ ms.forEach(function(m){ if(m.target.classList && m.target.classList.contains('cust')) ensureGuideSlots(m.target); }); }).observe(gl,{subtree:true,attributes:true,attributeFilter:['class']}); })();
+/* ===== 引路人大頭照：存在 Supabase Storage 的 guide-photos/<引路人id>.jpg（公開讀取，只有管理員能上傳） ===== */
+function guidePhotoUrl(id){ return window.SUPA.url+'/storage/v1/object/public/guide-photos/'+encodeURIComponent(id)+'.jpg'; }
+function guidePhotoHtml(g){
+  return '<div class="gphoto" style="display:flex;align-items:center;gap:14px;margin-bottom:12px">'+
+    '<span style="flex:none;position:relative;width:72px;height:72px;border-radius:50%;background:conic-gradient(from 160deg,#F6C9B9,#F8DEAC,#CAE6C4,#BCE0E7,#D4CBED,#F6C9B9);display:flex;align-items:center;justify-content:center">'+
+      '<span style="position:relative;width:52px;height:52px;border-radius:50%;background:#FFFDF8;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--soft)">尚無照片'+
+        '<img data-gp-img alt="" src="'+esc(guidePhotoUrl(g.id))+'?t='+Date.now()+'" onerror="this.style.display=\'none\'" onload="this.style.display=\'block\'" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover">'+
+      '</span></span>'+
+    '<div style="font-size:12.5px;color:var(--soft)"><div style="font-weight:500;margin-bottom:6px">大頭照（公開顯示）</div>'+
+      '<label class="del" style="display:inline-block;cursor:pointer;color:#4A3A2A;background:var(--rainbow);text-decoration:none;border-radius:999px;padding:6px 14px">選擇照片<input type="file" accept="image/*" data-gp-file style="display:none"></label> '+
+      '<button type="button" class="del" data-gp-del>移除</button> <span data-gp-msg></span>'+
+      '<div style="font-size:11.5px;margin-top:5px">建議正方形、臉在中間；會自動裁成正方形並壓縮</div></div>'+
+  '</div>';
+}
+// 讀圖 → 置中裁正方形 → 縮到 480px → JPEG
+function squareJpeg(file,size){
+  return new Promise(function(res,rej){
+    var url=URL.createObjectURL(file), im=new Image();
+    im.onload=function(){
+      var s=Math.min(im.naturalWidth,im.naturalHeight), c=document.createElement('canvas'); c.width=c.height=size;
+      var ctx=c.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,size,size);
+      ctx.drawImage(im,(im.naturalWidth-s)/2,(im.naturalHeight-s)/2,s,s,0,0,size,size);
+      URL.revokeObjectURL(url);
+      c.toBlob(function(b){ b?res(b):rej(new Error('轉檔失敗')); },'image/jpeg',0.85);
+    };
+    im.onerror=function(){ URL.revokeObjectURL(url); rej(new Error('讀不到這張圖片，請換 JPG 或 PNG')); };
+    im.src=url;
+  });
+}
+function bindGuidePhoto(el,id){
+  var fi=el.querySelector('[data-gp-file]'), del=el.querySelector('[data-gp-del]'), msg=el.querySelector('[data-gp-msg]'), img=el.querySelector('[data-gp-img]');
+  function setMsg(t,c){ if(msg){ msg.textContent=t; msg.style.color=c||'var(--soft)'; } }
+  function reload(){ if(img){ img.style.display='none'; img.src=guidePhotoUrl(id)+'?t='+Date.now(); } }
+  if(fi) fi.onchange=async function(){
+    var f=fi.files&&fi.files[0]; fi.value=''; if(!f) return;
+    setMsg('上傳中…');
+    try{
+      var blob=await squareJpeg(f,480);
+      var r=await db.storage.from('guide-photos').upload(id+'.jpg',blob,{upsert:true,contentType:'image/jpeg',cacheControl:'300'});
+      if(r.error) throw new Error(r.error.message);
+      setMsg('已更新（公開頁約 5 分鐘內換新）','#4F8E6E'); reload();
+    }catch(e){ setMsg('上傳失敗：'+(e.message||''),'#C0506A'); }
+  };
+  if(del) del.onclick=async function(){
+    if(!confirm('移除這位引路人的大頭照？')) return;
+    var r=await db.storage.from('guide-photos').remove([id+'.jpg']);
+    if(r.error){ setMsg('移除失敗：'+r.error.message,'#C0506A'); return; }
+    setMsg('已移除','#4F8E6E'); reload();
+  };
+}
+function bindGuides(){
+  document.querySelectorAll('#glist .cust').forEach(function(el){
+    var id=el.getAttribute('data-id');
+    bindGuidePlans(el);
+    bindGuideLegacy(el,id);
+    bindGuidePhoto(el,id);
+    ensureGuideSlots(el);
+    var ga=el.querySelector('[data-garea]'), gh=el.querySelector('input[data-f="region"]');
+    if(ga && gh && window.RWArea) RWArea.multi(ga,{cls:'in',value:gh.value,onChange:function(v){ gh.value=v; gh.dispatchEvent(new Event('change')); }});
+    el.querySelectorAll('[data-f]').forEach(function(inp){
+      inp.addEventListener('change',async function(){
+        var f=inp.getAttribute('data-f'), val;
+        if(inp.type==='checkbox'){ val=inp.checked; }
+        else if(f==='services'){ val=inp.value.split(/[,，、]/).map(function(s){return s.trim();}).filter(Boolean); }
+        else { val=inp.value; }
+        var patch={}; patch[f]=val;
+        var s=el.querySelector('[data-saved]'); s.textContent='儲存中…'; s.style.color='var(--soft)';
+        var r=await db.from('guides').update(patch).eq('id',id);
+        if(r.error){ s.textContent='存檔失敗'; s.style.color='#C0506A'; }
+        else{ s.textContent='已儲存'; s.style.color='#4F8E6E'; var g=guideById(id); if(g)g[f]=val; if((f==='name'||f==='email') && g && g.email){ try{ db.from('customers').update({name:g.name||''}).eq('contact', g.email); }catch(e){} } if(f==='name'){fillSelects();renderTx();} setTimeout(function(){s.textContent='';},1400); }
+      });
+    });
+    el.querySelector('[data-del]').onclick=async function(){
+      if(!confirm('刪除這位引路人？會移到「刪除紀錄」，可還原。'))return;
+      if(await softDelete('guides',id,GUIDES)){ renderGuides(); fillSelects(); renderTrash(); }
+    };
+    var ap=el.querySelector('[data-approve]');
+    if(ap) ap.onchange=async function(){ if(!ap.checked)return; var r=await db.from('guides').update({pending:false,active:true}).eq('id',id); if(r.error){ alert('上架失敗：'+r.error.message); ap.checked=false; return; } var gg=guideById(id); if(gg){gg.pending=false;gg.active=true;} renderGuides(); fillSelects(); };
+  });
+}
+$('#add-guide').onclick=async function(){
+  var r=await db.from('guides').insert({name:'',active:true});
+  if(r.error){ alert('新增失敗：'+r.error.message); return; }
+  await loadAll(); document.querySelector('.tabbar [data-tab="guides"]').click();
+  var f=document.querySelector('#glist .cust'); if(f){ if(isM()) mOpenCard(f); else f.classList.remove('collapsed'); }
+};
+['g-filter','g-search','g-region','g-mode'].forEach(function(id){ var e=document.getElementById(id); if(e){ e.addEventListener('change',renderGuides); e.addEventListener('input',renderGuides); } });
+
+/* ===== 交易紀錄 ＋ 儲值 ===== */
+function fillSelects(){
+  // 客戶／引路人改成可搜尋下拉（setupCombo 讀即時 ALL/GUIDES），這裡只填報表的引路人篩選
+  $('#tx-fguide').innerHTML='<option value="">全部引路人</option>'+GUIDES.map(function(g){return '<option value="'+g.id+'">'+esc(guideLabel(g))+'</option>';}).join('');
+}
+// 可搜尋下拉：打字過濾、點選把 id 填進隱藏欄位（送出照常讀 $('#tx-cust').value 等）
+function setupCombo(qId,hidId,popId,getList,labelFn,subFn){
+  var q=document.getElementById(qId), hid=document.getElementById(hidId), pop=document.getElementById(popId);
+  if(!q||!hid||!pop) return;
+  function draw(){
+    var fl=q.value.trim().toLowerCase();
+    var items=getList().filter(function(it){ if(!fl) return true; var hay=(labelFn(it)+' '+(subFn?(subFn(it)||''):'')).toLowerCase(); return hay.indexOf(fl)>=0; }).slice(0,60);
+    pop.innerHTML=items.length ? items.map(function(it){ var s=subFn?subFn(it):''; return '<div class="cbx-opt" data-id="'+esc(String(it.id))+'">'+esc(labelFn(it))+(s?'<small>'+esc(s)+'</small>':'')+'</div>'; }).join('') : '<div class="cbx-empty">找不到符合的，換個關鍵字</div>';
+    pop.classList.add('open');
+  }
+  q.addEventListener('focus',draw);
+  q.addEventListener('input',function(){ hid.value=''; draw(); });
+  pop.addEventListener('mousedown',function(e){ var o=e.target.closest('.cbx-opt'); if(!o)return; e.preventDefault(); var id=o.getAttribute('data-id'); hid.value=id; var it=getList().find(function(x){return String(x.id)===String(id);}); q.value=it?labelFn(it):''; pop.classList.remove('open'); });
+  document.addEventListener('click',function(e){ if(e.target!==q && !pop.contains(e.target)) pop.classList.remove('open'); });
+}
+setupCombo('tx-cust-q','tx-cust','tx-cust-pop',function(){return ALL;},custLabel,function(c){return [c.contact,c.phone,c.area,c.ref_code?('代碼'+c.ref_code):''].filter(Boolean).join(' · ');});
+setupCombo('tp-cust-q','tp-cust','tp-cust-pop',function(){return ALL;},custLabel,function(c){return [c.contact,c.phone,c.area,c.ref_code?('代碼'+c.ref_code):''].filter(Boolean).join(' · ');});
+setupCombo('tx-guide-q','tx-guide','tx-guide-pop',function(){return GUIDES.filter(function(g){return !g.pending;});},guideLabel,function(g){return g.region||g.email||'';});
+function statusBadge(st){
+  var cls=st==='已完成'?'st-done':st==='已取消'?'st-cancel':st==='已退費'?'st-refund':st==='未出席'?'st-noshow':st==='已出貨'?'st-ship':'st-book';
+  return '<span class="status-badge '+cls+'">'+esc(st||'—')+'</span>';
+}
+$('#tx-add').onclick=async function(){
+  var cid=$('#tx-cust').value, amt=$('#tx-amount').value;
+  var msg=$('#tx-msg');
+  if(!cid){ msg.textContent='請先選客戶'; msg.style.color='#C0506A'; return; }
+  if(amt===''){ msg.textContent='請填金額'; msg.style.color='#C0506A'; return; }
+  var txd=$('#tx-date').value, txt=$('#tx-time').value, txwhen=(txd&&txt)?txd+'T'+txt:null;
+  var row={customer_id:cid, guide_id:$('#tx-guide').value||null, service:$('#tx-service').value||null, appointment_at:txwhen, amount:Number(amt)||0, method:$('#tx-method').value, status:$('#tx-status').value, notes:$('#tx-notes').value||null};
+  msg.textContent='新增中…'; msg.style.color='var(--soft)';
+  var r=await db.from('transactions').insert(row);
+  if(r.error){ msg.textContent='失敗：'+r.error.message; msg.style.color='#C0506A'; return; }
+  msg.textContent='已新增'; msg.style.color='#4F8E6E'; setTimeout(function(){msg.textContent='';},1500);
+  $('#tx-service').value=''; $('#tx-date').value=''; $('#tx-time').value=''; $('#tx-amount').value=''; $('#tx-notes').value='';
+  $('#tx-cust-q').value=''; $('#tx-cust').value=''; $('#tx-guide-q').value=''; $('#tx-guide').value='';
+  var rr=await db.from('transactions').select('*').order('created_at',{ascending:false}); var allTx=rr.data||[]; TX=allTx.filter(function(x){return !x.deleted;}); DEL.transactions=allTx.filter(function(x){return x.deleted;}); renderTx(); render(); renderTrash();
+};
+$('#tp-add').onclick=async function(){
+  var cid=$('#tp-cust').value, amt=$('#tp-amount').value;
+  var msg=$('#tp-msg');
+  if(!cid){ msg.textContent='請先選客戶'; msg.style.color='#C0506A'; return; }
+  if(amt===''){ msg.textContent='請填金額'; msg.style.color='#C0506A'; return; }
+  if(Number(amt)>20000){ msg.textContent='單筆儲值上限 NT$20,000（依退費條款）'; msg.style.color='#C0506A'; return; }
+  msg.textContent='新增中…'; msg.style.color='var(--soft)';
+  var trow={customer_id:cid, amount:Number(amt)||0, method:$('#tp-method').value, notes:$('#tp-notes').value||null};
+  var td=$('#tp-date').value; if(td){ trow.created_at=td; }
+  var r=await db.from('topups').insert(trow);
+  if(r.error){ msg.textContent='失敗：'+r.error.message; msg.style.color='#C0506A'; return; }
+  msg.textContent='已儲值'; msg.style.color='#4F8E6E'; setTimeout(function(){msg.textContent='';},1500);
+  $('#tp-amount').value=''; $('#tp-notes').value=''; $('#tp-cust-q').value=''; $('#tp-cust').value='';
+  var rr=await db.from('topups').select('*').order('created_at',{ascending:false}); var allTp=rr.data||[]; TOPUPS=allTp.filter(function(x){return !x.deleted;}); DEL.topups=allTp.filter(function(x){return x.deleted;}); render(); renderTx(); renderTrash();
+};
+var TX_SORT={key:'appt',dir:-1};   // 預設依預約時間新→舊
+function txDate(t){ return t.appointment_at||t.created_at; }
+function cmpKeyTx(t){ if(t.appointment_at){ var p=wpart(t.appointment_at); if(p) return new Date(p.y,p.mo-1,p.d,p.h,p.mi); } return new Date(t.created_at||t.appointment_at||0); }
+function inTxRange(t){
+  var from=$('#tx-ffrom').value, to=$('#tx-fto').value; if(!from&&!to) return true;
+  var ds=txDate(t); if(!ds) return false; var d=cmpKeyTx(t);
+  if(from && d<new Date(from+'T00:00:00')) return false;
+  if(to && d>new Date(to+'T23:59:59')) return false;
+  return true;
+}
+// 交易紀錄表格同時列出「消費」（transactions）與「儲值」（topups，_kind='topup'）
+function isTopup(t){ return t && t._kind==='topup'; }
+function isShopTx(t){ return t && !t._kind && /^商品：/.test(String(t.service||'')); }
+function txFiltered(){
+  var q=$('#tx-search').value.trim().toLowerCase();
+  var fs=$('#tx-fstatus').value, fg=$('#tx-fguide').value, fm=$('#tx-fmethod').value, ft=($('#tx-ftype')||{}).value||'';
+  var src=[];
+  if(ft!=='topup') src=src.concat(TX.filter(function(t){ return !isShopTx(t); }));  // 商品訂單改在「商品管理 → 訂單明細」
+  if(ft!=='tx' && !fs && !fg) src=src.concat(TOPUPS.map(function(p){ var o=Object.assign({},p); o._kind='topup'; return o; }));
+  var rows=src.filter(function(t){
+    if(fs && t.status!==fs) return false;
+    if(fg && t.guide_id!==fg) return false;
+    if(fm && t.method!==fm) return false;
+    if(!inTxRange(t)) return false;
+    if(q){ var c=custById(t.customer_id); var hay=[(c?custLabel(c):''),t.guest_name,t.guest_contact,(isTopup(t)?'儲值':guideName(t.guide_id)),t.service,t.order_ref,t.notes].join(' ').toLowerCase(); if(hay.indexOf(q)<0) return false; }
+    return true;
+  });
+  rows.sort(function(a,b){
+    var k=TX_SORT.key, va, vb;
+    if(k==='amount'){ va=Number(a.amount||0); vb=Number(b.amount||0); }
+    else if(k==='created'){ va=+new Date(a.created_at||0); vb=+new Date(b.created_at||0); }
+    else { va=+cmpKeyTx(a); vb=+cmpKeyTx(b); }
+    return (va>vb?1:va<vb?-1:0)*TX_SORT.dir;
+  });
+  return rows;
+}
+function renderTx(){
+  renderReport();  // 報表與交易紀錄同一份資料：交易有新增／修改／刪除就一起更新
+  var rows=txFiltered();
+  var txRows=rows.filter(function(t){return !isTopup(t);}), tpRows=rows.filter(isTopup);
+  var valid=txRows.filter(function(t){return t.status!=='已取消'&&t.status!=='已退費';});
+  var sum=valid.reduce(function(a,t){return a+Number(t.amount||0);},0);
+  var refunds=txRows.filter(function(t){return t.status==='已退費';});
+  var refAmt=refunds.reduce(function(a,t){return a+Number(t.amount||0);},0);
+  var tpSum=tpRows.reduce(function(a,t){return a+Number(t.amount||0);},0);
+  $('#txcount').textContent='顯示 '+rows.length+' 筆（全部 預約 '+TX.filter(function(t){return !isShopTx(t);}).length+' 筆・儲值 '+TOPUPS.length+' 筆；商品訂單在「商品管理」）';
+  if(!rows.length){ $('#txlist').innerHTML='<div class="muted" style="padding:24px;text-align:center">沒有符合的紀錄</div>'; return; }
+  var foot='<div class="txfoot"><span>有效 <b>'+valid.length+'</b> 筆 · 營收 <b>'+money(sum)+'</b></span><span>退費 <b>'+refunds.length+'</b> 筆／<b>'+money(refAmt)+'</b></span><span>儲值 <b>'+tpRows.length+'</b> 筆／<b>'+money(tpSum)+'</b></span></div>';
+  if(isM()){  // 手機：先看摘要，點進去才看明細
+    $('#txlist').innerHTML='<div class="m-list">'+rows.map(txMRow).join('')+'</div>'+foot.replace('class="txfoot"','class="txfoot" style="border:1px solid var(--line);border-radius:12px;margin-top:10px"');
+    $('#txlist').querySelectorAll('.m-row').forEach(function(r){ r.onclick=function(){ openTxDetail(r.getAttribute('data-id'),r.getAttribute('data-kind')); }; });
+    return;
+  }
+  function arr(k){ return TX_SORT.key===k?'<span class="arr">'+(TX_SORT.dir<0?'▼':'▲')+'</span>':''; }
+  $('#txlist').innerHTML='<div class="txbulk" id="tx-bulk"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px"><input type="checkbox" id="tx-ckall">全選本頁</label><span style="font-size:13px">已選 <b id="tx-cksel">0</b> 筆</span><span style="flex:1"></span><button class="bulkdel" id="tx-bulkdel" disabled>刪除選取</button></div>'+
+    '<div class="txtable-wrap"><table class="txt"><thead><tr>'+
+    '<th class="ck"></th>'+
+    '<th class="sortable" data-sort="appt">預約／儲值日期時間'+arr('appt')+'</th>'+
+    '<th>客戶</th><th>引路人</th><th>服務</th>'+
+    '<th class="sortable" data-sort="amount" style="text-align:right">金額'+arr('amount')+'</th>'+
+    '<th>付款</th><th>狀態</th><th>訂單編號</th><th>末5碼</th>'+
+    '<th class="sortable" data-sort="created">下單日'+arr('created')+'</th>'+
+    '<th>備註</th><th></th></tr></thead><tbody>'+
+    rows.map(txRow).join('')+
+    '</tbody></table></div>'+foot+
+    '<div class="txsaved" id="tx-rowsaved"></div>';
+  bindTx();
+}
+function topupRow(t){
+  var c=custById(t.customer_id);
+  var mOpt=['現金','刷卡','匯款'].map(function(m){return '<option'+(t.method===m?' selected':'')+'>'+m+'</option>';}).join('');
+  return '<tr data-id="'+t.id+'" data-kind="topup" class="tp-row">'+
+    '<td class="ck"><input type="checkbox" class="tx-ck"></td>'+
+    '<td class="muted">'+fmtDate(t.created_at)+'</td>'+
+    '<td>'+esc(c?custLabel(c):'(已刪客戶)')+'</td>'+
+    '<td class="muted">—</td>'+
+    '<td><span class="status-badge st-topup">儲值</span></td>'+
+    '<td class="num"><input class="tin amt" data-f="amount" type="number" value="'+esc(t.amount)+'"></td>'+
+    '<td><select class="tin" data-f="method">'+mOpt+'</select></td>'+
+    '<td><span class="status-badge st-topup">儲值入帳</span></td>'+
+    '<td class="ref">—</td><td class="ref">—</td>'+
+    '<td class="muted">'+fmtDay(t.created_at)+'</td>'+
+    '<td><input class="tin" data-f="notes" value="'+esc(t.notes)+'" placeholder="—"></td>'+
+    '<td><button class="txdel" data-del title="刪除">✕</button></td>'+
+  '</tr>';
+}
+function txRow(t){
+  if(isTopup(t)) return topupRow(t);
+  var c=custById(t.customer_id);
+  var cname=c?custLabel(c):(t.guest_name?t.guest_name+'（訪客）':'(已刪客戶)');
+  var mOpt=['現金','刷卡','匯款','儲值'].map(function(m){return '<option'+(t.method===m?' selected':'')+'>'+m+'</option>';}).join('');
+  var sOpt=['已預約','已完成','未出席','已取消','已退費'].map(function(s){return '<option'+(t.status===s?' selected':'')+'>'+s+'</option>';}).join('');
+  return '<tr data-id="'+t.id+'">'+
+    '<td class="ck"><input type="checkbox" class="tx-ck"></td>'+
+    '<td class="muted">'+(t.appointment_at?fmtAppt(t.appointment_at):'未定')+'</td>'+
+    '<td>'+esc(cname)+'</td>'+
+    '<td class="muted">'+esc(guideName(t.guide_id))+'</td>'+
+    '<td><input class="tin" data-f="service" value="'+esc(t.service)+'" placeholder="—"></td>'+
+    '<td class="num"><input class="tin amt" data-f="amount" type="number" value="'+esc(t.amount)+'"></td>'+
+    '<td><select class="tin" data-f="method">'+mOpt+'</select></td>'+
+    '<td><select class="tin" data-f="status">'+sOpt+'</select></td>'+
+    '<td class="ref">'+esc(t.order_ref||'—')+'</td>'+
+    '<td class="ref">'+((t.method==='匯款'&&t.pay_last5)?esc(t.pay_last5):'—')+'</td>'+
+    '<td class="muted">'+fmtDay(t.created_at)+'</td>'+
+    '<td><input class="tin" data-f="notes" value="'+esc(t.notes)+'" placeholder="—"></td>'+
+    '<td><button class="txdel" data-del title="刪除">✕</button></td>'+
+  '</tr>';
+}
+function bindTx(){
+  var sv=$('#tx-rowsaved');
+  document.querySelectorAll('#txlist tr[data-id]').forEach(function(tr){ bindTxRow(tr,sv); });
+  var ckall=$('#tx-ckall');
+  if(ckall) ckall.onclick=function(){ document.querySelectorAll('#txlist .tx-ck').forEach(function(c){ c.checked=ckall.checked; }); updateTxBulk(); };
+  document.querySelectorAll('#txlist .tx-ck').forEach(function(c){ c.onclick=updateTxBulk; });
+  var bd=$('#tx-bulkdel');
+  if(bd) bd.onclick=async function(){
+    var ids=Array.prototype.map.call(document.querySelectorAll('#txlist .tx-ck:checked'),function(c){ var tr=c.closest('tr'); return tr?{id:tr.getAttribute('data-id'),tp:tr.getAttribute('data-kind')==='topup'}:null; }).filter(Boolean);
+    if(!ids.length) return;
+    if(!confirm('刪除選取的 '+ids.length+' 筆紀錄？會移到「刪除紀錄」，可還原。')) return;
+    bd.disabled=true; bd.textContent='刪除中…';
+    var fail=0;
+    for(var i=0;i<ids.length;i++){ if(!(await softDelete(ids[i].tp?'topups':'transactions', ids[i].id, ids[i].tp?TOPUPS:TX, true))) fail++; }
+    renderTx(); render(); renderTrash();
+    if(fail) alert('有 '+fail+' 筆刪除失敗（可能權限或已被刪除），其餘已移到刪除紀錄。');
+  };
+  updateTxBulk();
+}
+// 一筆交易／儲值的欄位編輯＋刪除（電腦版表格列、手機版明細共用）
+function bindTxRow(tr,sv){
+  var id=tr.getAttribute('data-id'), tp=tr.getAttribute('data-kind')==='topup';
+  var tbl=tp?'topups':'transactions', ARR=tp?TOPUPS:TX;
+  tr.querySelectorAll('[data-f]').forEach(function(inp){
+    inp.addEventListener('change',async function(){
+      var f=inp.getAttribute('data-f'), val=inp.value; if(f==='amount') val=Number(val)||0;
+      var patch={}; patch[f]=val;
+      if(sv){ sv.textContent='儲存中…'; sv.style.color='var(--soft)'; }
+      var r=await db.from(tbl).update(patch).eq('id',id);
+      if(r.error){ if(sv){ sv.textContent='存檔失敗'; sv.style.color='#C0506A'; } }
+      else{ var t=ARR.find(function(x){return x.id===id;}); if(t)t[f]=val;
+        var am=tr.querySelector('.hd .am'); if(am && f==='amount') am.textContent=(tp?'+':'')+money(val);
+        if(f==='status'||f==='amount'||f==='method'){ render(); renderTx(); }
+        if(sv){ sv.textContent='已儲存'; sv.style.color='#4F8E6E'; setTimeout(function(){sv.textContent='';},1200); } }
+    });
+  });
+  tr.querySelector('[data-del]').onclick=async function(){
+    if(!confirm(tp?'刪除這筆儲值？會移到「刪除紀錄」可還原；餘額會重算。':'刪除這筆交易？會移到「刪除紀錄」，可還原。'))return;
+    if(await softDelete(tbl,id,ARR)){ var sec=tr.closest('section'); if(sec && sec.classList.contains('m-in-det')) mCloseDetail(sec); renderTx(); render(); renderTrash(); }
+  };
+}
+function updateTxBulk(){
+  var cks=document.querySelectorAll('#txlist .tx-ck'), sel=document.querySelectorAll('#txlist .tx-ck:checked'), n=sel.length;
+  var cs=$('#tx-cksel'); if(cs) cs.textContent=n;
+  var bd=$('#tx-bulkdel'); if(bd){ bd.disabled=(n===0); if(n===0) bd.textContent='刪除選取'; }
+  var all=$('#tx-ckall'); if(all){ all.checked=(cks.length>0 && n===cks.length); all.indeterminate=(n>0 && n<cks.length); }
+}
+function txExportCSV(){
+  var rows=txFiltered();
+  var head=['類型','預約／儲值日期時間','客戶','引路人','服務','金額','付款','狀態','訂單編號','末5碼','下單日','備註'];
+  function cell(v){ v=(v==null?'':String(v)); return '"'+v.replace(/"/g,'""')+'"'; }
+  var lines=[head.map(cell).join(',')];
+  rows.forEach(function(t){ var c=custById(t.customer_id);
+    if(isTopup(t)){ lines.push(['儲值', fmtDate(t.created_at), c?custLabel(c):'', '', '儲值', Number(t.amount||0), t.method||'', '儲值入帳', '', '', fmtDay(t.created_at), t.notes||''].map(cell).join(',')); return; }
+    lines.push(['消費',
+    t.appointment_at?fmtAppt(t.appointment_at):'', c?custLabel(c):(t.guest_name||''), guideName(t.guide_id),
+    t.service||'', Number(t.amount||0), t.method||'', t.status||'', t.order_ref||'',
+    (t.method==='匯款'?(t.pay_last5||''):''), fmtDay(t.created_at), t.notes||''
+  ].map(cell).join(',')); });
+  var blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+  var url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download='彩之語交易紀錄.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(url);},800);
+}
+// 點表頭排序
+var txlistEl=document.getElementById('txlist');
+if(txlistEl) txlistEl.addEventListener('click',function(e){ var th=e.target.closest('th.sortable'); if(!th)return; var k=th.getAttribute('data-sort'); if(TX_SORT.key===k){ TX_SORT.dir*=-1; } else { TX_SORT.key=k; TX_SORT.dir=-1; } renderTx(); });
+['tx-search','tx-ftype','tx-fstatus','tx-fguide','tx-fmethod','tx-ffrom','tx-fto'].forEach(function(id){ var e=document.getElementById(id); if(e){ e.addEventListener('input',renderTx); e.addEventListener('change',renderTx); } });
+var txClr=document.getElementById('tx-clear'); if(txClr) txClr.onclick=function(){ ['tx-search','tx-ffrom','tx-fto','tx-ftype','tx-fstatus','tx-fguide','tx-fmethod'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';}); renderTx(); };
+var txExp=document.getElementById('tx-export'); if(txExp) txExp.onclick=txExportCSV;
+// 報表匯出：依目前日期範圍，先放總覽，再依引路人分組列出交易＋小計（與畫面同一份資料）
+function rpExportCSV(){
+  function cell(v){ v=(v==null?'':String(v)); return '"'+v.replace(/"/g,'""')+'"'; }
+  function line(a){ return a.map(cell).join(','); }
+  var from=$('#rp-from').value, to=$('#rp-to').value;
+  var rows=TX.filter(function(t){ return inRange(cmpKeyTx(t)); });
+  var isValid=function(t){ return t.status!=='已取消'&&t.status!=='已退費'; };
+  var valid=rows.filter(isValid), refunds=rows.filter(function(t){return t.status==='已退費';});
+  var sum=function(a){ return a.reduce(function(x,t){return x+Number(t.amount||0);},0); };
+  var byM={現金:0,刷卡:0,匯款:0,儲值:0}; valid.forEach(function(t){ if(byM[t.method]!==undefined) byM[t.method]+=Number(t.amount||0); });
+  var topupIn=sum(TOPUPS.filter(function(t){return inRange(new Date(t.created_at||0));}));
+  var L=[];
+  L.push(line(['彩之語報表', (from||to)?((from||'最早')+' ~ '+(to||'今天')):'全部期間']));
+  L.push(line(['有效營收',sum(valid),'交易筆數',valid.length,'退費筆數',refunds.length,'退費金額',sum(refunds),'儲值收入',topupIn]));
+  L.push(line(['現金',byM.現金,'刷卡',byM.刷卡,'匯款',byM.匯款,'儲值折抵',byM.儲值]));
+  L.push('');
+  L.push(line(['引路人','預約日期時間','客戶','服務','金額','付款','狀態','訂單編號','末5碼','下單日','備註']));
+  var g={}; rows.forEach(function(t){ var k=isShopTx(t)?'__shop__':(t.guide_id||'__none__'); (g[k]=g[k]||[]).push(t); });
+  Object.keys(g).sort(function(a,b){ return sum(g[b].filter(isValid))-sum(g[a].filter(isValid)); }).forEach(function(k){
+    var name=k==='__shop__'?'商品訂單':k==='__none__'?'（未指定引路人）':guideName(k), items=g[k].slice().sort(function(a,b){ return cmpKeyTx(b)-cmpKeyTx(a); });
+    items.forEach(function(t){ var c=custById(t.customer_id); L.push(line([
+      name, t.appointment_at?fmtApptFull(t.appointment_at):'', c?custLabel(c):(t.guest_name||''), t.service||'', Number(t.amount||0),
+      t.method||'', t.status||'', t.order_ref||'', (t.method==='匯款'?(t.pay_last5||''):''), fmtDay(t.created_at), t.notes||'' ])); });
+    var v=items.filter(isValid), rf=items.filter(function(t){return t.status==='已退費';});
+    L.push(line([name+' 小計','','','有效 '+v.length+' 筆',sum(v),'','退費 '+rf.length+' 筆',sum(rf)?('退費 $'+sum(rf)):'','','','']));
+    L.push('');
+  });
+  var blob=new Blob(['\ufeff'+L.join('\r\n')],{type:'text/csv;charset=utf-8'});
+  var url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download='彩之語報表'+((from||to)?('_'+(from||'')+'~'+(to||'')):'')+'.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(url);},800);
+}
+var rpExp=document.getElementById('rp-export'); if(rpExp) rpExp.onclick=rpExportCSV;
+(function(){ var sel=document.getElementById('tx-time'); if(sel){ var h='<option value="">選時間</option>'; for(var hh=0;hh<24;hh++){ for(var mm=0;mm<60;mm+=30){ var v=(hh<10?'0':'')+hh+':'+(mm<10?'0':'')+mm; h+='<option value="'+v+'">'+v+'</option>'; } } sel.innerHTML=h; } })();
+
+/* ===== 報表 ===== */
+function stat(k,v){ return '<div class="stat"><div class="k">'+k+'</div><div class="v">'+v+'</div></div>'; }
+function inRange(d){
+  var from=$('#rp-from').value, to=$('#rp-to').value;
+  if(!from && !to) return true;
+  if(!d) return false;
+  if(from && d < new Date(from+'T00:00:00')) return false;
+  if(to && d > new Date(to+'T23:59:59')) return false;
+  return true;
+}
+var RP_OPEN={};  // 報表裡展開中的引路人（重畫時保留）
+function renderReport(){
+  var rows=TX.filter(function(t){ return inRange(cmpKeyTx(t)); });
+  var valid=rows.filter(function(t){ return t.status!=='已取消'&&t.status!=='已退費'; });
+  var refunds=rows.filter(function(t){ return t.status==='已退費'; });
+  var byM={現金:0,刷卡:0,匯款:0,儲值:0}, total=0;
+  valid.forEach(function(t){ var a=Number(t.amount||0); total+=a; if(byM[t.method]!==undefined) byM[t.method]+=a; });
+  var refundAmt=refunds.reduce(function(a,t){return a+Number(t.amount||0);},0);
+  var topupIn=TOPUPS.filter(function(t){return inRange(new Date(t.created_at||0));}).reduce(function(a,t){return a+Number(t.amount||0);},0);
+  $('#rp-summary').innerHTML=
+    '<div class="stats">'+stat('有效營收',money(total))+stat('交易筆數',valid.length+' 筆')+stat('退費',refunds.length+' 筆／'+money(refundAmt))+stat('儲值收入',money(topupIn))+'</div>'+
+    '<div class="stats">'+stat('現金',money(byM.現金))+stat('刷卡',money(byM.刷卡))+stat('匯款',money(byM.匯款))+stat('儲值折抵',money(byM.儲值))+'</div>';
+  var g={};
+  rows.forEach(function(t){
+    var k=isShopTx(t)?'__shop__':(t.guide_id||'__none__');
+    if(!g[k]) g[k]={items:[],count:0,amount:0,refund:0};
+    g[k].items.push(t);
+    if(t.status==='已退費'){ g[k].refund+=Number(t.amount||0); }
+    else if(t.status!=='已取消'){ g[k].count++; g[k].amount+=Number(t.amount||0); }
+  });
+  var keys=Object.keys(g).sort(function(a,b){return g[b].amount-g[a].amount;});
+  if(!keys.length){ $('#rp-guides').innerHTML='<div class="muted" style="padding:20px;text-align:center">此範圍沒有交易</div>'; return; }
+  var h='';
+  keys.forEach(function(k){
+    var gg=g[k], name=k==='__shop__'?'🛍️ 商品訂單':k==='__none__'?'（未指定引路人）':guideName(k);
+    h+='<div class="gblock'+(RP_OPEN[k]?'':' collapsed')+'" data-k="'+esc(k)+'"><div class="gblock-head"><b><span class="caret">▾</span> '+esc(name)+'</b><span class="gh-meta">'+gg.count+' 筆 · 有效 '+money(gg.amount)+(gg.refund?' · 退費 '+money(gg.refund):'')+'</span></div><div class="gitems">';
+    gg.items.sort(function(a,b){ return cmpKeyTx(b) - cmpKeyTx(a); });
+    // 與「交易紀錄」同一份資料、同樣欄位（唯讀、不打勾）；交易刪除/修改後報表跟著變
+    if(isM()){  // 手機：條列，點一筆看交易明細
+      h+=gg.items.map(function(t){
+        var c=custById(t.customer_id), cname=c?adName(c):(t.guest_name?esc(t.guest_name)+'（訪客）':'(已刪客戶)');
+        return '<button type="button" class="m-row" data-txid="'+t.id+'"><span class="mn"><b>'+cname+'</b>　'+esc(String(t.service||'—').replace(/^商品：/,''))+'<small>'+(t.appointment_at?fmtAppt(t.appointment_at):fmtDate(t.created_at))+'・'+esc(t.method||'—')+'</small></span><span class="rt"><span class="am">'+money(t.amount)+'</span>'+statusBadge(isShopTx(t)?shopStLabel(t.status):t.status)+'</span><span class="go">›</span></button>';
+      }).join('');
+    } else {
+      h+='<div class="txtable-wrap"><table class="txt rp-txt"><thead><tr>'+
+        '<th>預約日期時間</th><th>客戶</th><th>服務</th><th style="text-align:right">金額</th>'+
+        '<th>付款</th><th>狀態</th><th>訂單編號</th><th>末5碼</th><th>下單日</th><th>備註</th></tr></thead><tbody>'+
+        gg.items.map(function(t){
+          var c=custById(t.customer_id);
+          var cname=c?custLabel(c):(t.guest_name?t.guest_name+'（訪客）':'(已刪客戶)');
+          return '<tr>'+
+            '<td class="muted">'+(t.appointment_at?fmtAppt(t.appointment_at):'未定')+'</td>'+
+            '<td>'+esc(cname)+'</td>'+
+            '<td>'+esc(t.service||'—')+'</td>'+
+            '<td class="num">'+money(t.amount)+'</td>'+
+            '<td>'+esc(t.method||'—')+'</td>'+
+            '<td>'+statusBadge(t.status)+'</td>'+
+            '<td class="ref">'+esc(t.order_ref||'—')+'</td>'+
+            '<td class="ref">'+((t.method==='匯款'&&t.pay_last5)?esc(t.pay_last5):'—')+'</td>'+
+            '<td class="muted">'+fmtDay(t.created_at)+'</td>'+
+            '<td class="muted">'+esc(t.notes||'—')+'</td>'+
+          '</tr>';
+        }).join('')+
+        '</tbody></table></div>';
+    }
+    h+='</div></div>';
+  });
+  $('#rp-guides').innerHTML=h;
+}
+['rp-from','rp-to'].forEach(function(id){ var e=document.getElementById(id); if(e) e.addEventListener('change',renderReport); });
+var rpc=document.getElementById('rp-clear'); if(rpc) rpc.onclick=function(){ $('#rp-from').value=''; $('#rp-to').value=''; renderReport(); };
+$('#rp-guides').addEventListener('click',function(e){ var mr=e.target.closest('[data-txid]'); if(mr){ openTxDetail(mr.getAttribute('data-txid')); return; } var head=e.target.closest('.gblock-head'); if(head&&head.parentNode){ var gb=head.parentNode; gb.classList.toggle('collapsed'); RP_OPEN[gb.getAttribute('data-k')]=!gb.classList.contains('collapsed'); } });
+var rpAllCollapsed=true, rpc2=document.getElementById('rp-collapse');
+if(rpc2) rpc2.onclick=function(){ rpAllCollapsed=!rpAllCollapsed; document.querySelectorAll('#rp-guides .gblock').forEach(function(b){ b.classList.toggle('collapsed',rpAllCollapsed); RP_OPEN[b.getAttribute('data-k')]=!rpAllCollapsed; }); rpc2.textContent=rpAllCollapsed?'全部展開':'全部收合'; };
+
+/* ===== 卡片收合（客戶/引路人/交易） ===== */
+['#list','#glist','#txlist'].forEach(function(sel){ var c=document.querySelector(sel); if(c) c.addEventListener('click',function(e){ if(e.target.closest('.a-edit,.a-alias')) return; var head=e.target.closest('.chead'); if(head){ var card=head.closest('.cust'); if(!card) return; if(isM() && (sel==='#list'||sel==='#glist')){ mOpenCard(card); return; } card.classList.toggle('collapsed'); } }); });
+function bindCollapseAll(btnId,listSel){ var btn=document.getElementById(btnId); if(!btn) return; btn.onclick=function(){ var cards=document.querySelectorAll(listSel+' .cust'); var anyOpen=Array.prototype.some.call(cards,function(b){return !b.classList.contains('collapsed');}); cards.forEach(function(b){ b.classList.toggle('collapsed',anyOpen); }); btn.textContent=anyOpen?'全部展開':'全部收合'; }; }
+bindCollapseAll('cust-collapse','#list'); bindCollapseAll('guide-collapse','#glist'); bindCollapseAll('tx-collapse','#txlist');
+
+/* ===== 商品管理（測試版商品頁）===== */
+var SHOP=[];
+async function loadShop(){
+  var box=$('#shoplist'); if(!box) return; box.innerHTML='<div class="muted" style="padding:16px">載入中…</div>';
+  var r=await db.from('shop_products').select('*').order('sort').order('created_at');
+  if(r.error){ box.innerHTML='<div class="muted" style="padding:16px">讀取失敗：'+esc(r.error.message)+'（請先在 Supabase 跑商品的 SQL）</div>'; return; }
+  SHOP=(r.data||[]).filter(function(x){ return !x.deleted; });
+  if(!SHOP.length){ box.innerHTML='<div class="muted" style="padding:16px">還沒有商品，用下方新增。</div>'; return; }
+  if(isM()) box.innerHTML=SHOP.map(function(p){ return '<div class="m-prod" data-id="'+p.id+'">'+mF('商品名稱','<input class="in" data-f="name" value="'+esc(p.name)+'">')+mF('價格','<input class="in" data-f="price" type="number" min="0" value="'+esc(p.price)+'">')+mF('介紹','<input class="in" data-f="description" value="'+esc(p.description||'')+'" placeholder="—">')+mF('排序','<input class="in" data-f="sort" type="number" value="'+esc(p.sort)+'">')+mF('上架','<label style="display:inline-flex;align-items:center;gap:6px"><input type="checkbox" data-f="active"'+(p.active?' checked':'')+'>上架中</label>　<button class="txdel" data-del title="刪除">刪除</button>')+'</div>'; }).join('')+'<div class="txsaved" id="sp-saved"></div>';
+  else box.innerHTML='<div class="txtable-wrap"><table class="txt" style="min-width:640px"><thead><tr><th style="width:60px">排序</th><th>商品名稱</th><th style="text-align:right;width:100px">價格</th><th>介紹</th><th style="width:70px">上架</th><th style="width:40px"></th></tr></thead><tbody>'+
+    SHOP.map(function(p){ return '<tr data-id="'+p.id+'"><td><input class="tin" data-f="sort" type="number" value="'+esc(p.sort)+'"></td><td><input class="tin" data-f="name" value="'+esc(p.name)+'"></td><td class="num"><input class="tin amt" data-f="price" type="number" min="0" value="'+esc(p.price)+'"></td><td><input class="tin" data-f="description" value="'+esc(p.description||'')+'"></td><td style="text-align:center"><input type="checkbox" data-f="active"'+(p.active?' checked':'')+'></td><td><button class="txdel" data-del title="刪除">✕</button></td></tr>'; }).join('')+
+    '</tbody></table></div><div class="txsaved" id="sp-saved"></div>';
+  box.querySelectorAll('[data-id]').forEach(function(tr){
+    var id=tr.getAttribute('data-id');
+    tr.querySelectorAll('[data-f]').forEach(function(inp){ inp.addEventListener('change',async function(){
+      var f=inp.getAttribute('data-f'), v=inp.type==='checkbox'?inp.checked:inp.value;
+      if(f==='price'||f==='sort') v=Number(v)||0;
+      if(f==='name' && !String(v).trim()){ alert('商品名稱不能空白'); loadShop(); return; }
+      var patch={}; patch[f]=v; var sv=$('#sp-saved'); if(sv){ sv.textContent='儲存中…'; sv.style.color='var(--soft)'; }
+      var x=await db.from('shop_products').update(patch).eq('id',id);
+      if(sv){ if(x.error){ sv.textContent='存檔失敗：'+x.error.message; sv.style.color='#C0506A'; } else { sv.textContent='已儲存'; sv.style.color='#4F8E6E'; setTimeout(function(){ sv.textContent=''; },1200); } }
+    }); });
+    tr.querySelector('[data-del]').onclick=async function(){ if(!confirm('刪除這個商品？（已成立的訂單不受影響）')) return; var x=await db.from('shop_products').update({deleted:true,active:false}).eq('id',id); if(x.error){ alert('刪除失敗：'+x.error.message); return; } loadShop(); };
+  });
+}
+(function(){ var b=document.getElementById('sp-addbtn'); if(!b) return; b.onclick=async function(){
+  var n=$('#sp-n').value.trim(), p=$('#sp-p').value, d=$('#sp-d').value.trim(), m=$('#sp-msg');
+  if(!n){ m.textContent='請填商品名稱'; m.style.color='#C0506A'; return; } if(p===''){ m.textContent='請填價格'; m.style.color='#C0506A'; return; }
+  var mx=SHOP.reduce(function(a,x){ return Math.max(a,Number(x.sort)||0); },0);
+  var r=await db.from('shop_products').insert({name:n,price:Number(p)||0,description:d||null,sort:mx+1});
+  if(r.error){ m.textContent='新增失敗：'+r.error.message; m.style.color='#C0506A'; return; }
+  $('#sp-n').value=''; $('#sp-p').value=''; $('#sp-d').value=''; m.textContent='已新增'; m.style.color='#4F8E6E'; setTimeout(function(){ m.textContent=''; },1400); loadShop();
+}; })();
+
+/* ===== 商品訂單明細（transactions 中服務以「商品：」開頭）===== */
+var SHOP_ST=[['已預約','待出貨'],['已出貨','已出貨'],['已完成','已完成'],['已取消','已取消'],['已退費','已退費']];
+function shopStLabel(st){ return st==='已預約'?'待出貨':(st||'—'); }
+function shopOrders(){ return TX.filter(isShopTx); }
+function soFiltered(){
+  var fs=($('#so-fstatus')||{}).value||'', q=(($('#so-search')||{}).value||'').trim().toLowerCase();
+  return shopOrders().filter(function(t){
+    if(fs && t.status!==fs) return false;
+    if(q){ var c=custById(t.customer_id); var hay=[c?custLabel(c):'',t.service,t.order_ref,t.notes,t.pay_last5].join(' ').toLowerCase(); if(hay.indexOf(q)<0) return false; }
+    return true;
+  }).sort(function(a,b){ return new Date(b.created_at||0)-new Date(a.created_at||0); });
+}
+function renderShopOrders(){
+  var pend=shopOrders().filter(function(t){ return t.status==='已預約'; }).length, bd=$('#so-badge'); if(bd) bd.textContent=pend?pend:'';
+  var box=$('#so-list'); if(!box) return;
+  var rows=soFiltered(), all=shopOrders();
+  var valid=rows.filter(function(t){ return t.status!=='已取消'&&t.status!=='已退費'; }), sum=valid.reduce(function(a,t){ return a+Number(t.amount||0); },0);
+  $('#so-count').textContent='顯示 '+rows.length+' 筆（全部 '+all.length+' 筆）　·　待出貨 '+pend+' 筆　·　有效金額 '+money(sum);
+  if(!rows.length){ box.innerHTML='<div class="muted" style="padding:24px;text-align:center">'+(all.length?'沒有符合的訂單':'還沒有商品訂單')+'</div>'; return; }
+  if(isM()){
+    box.innerHTML='<div class="m-list">'+rows.map(soMRow).join('')+'</div>';
+    box.querySelectorAll('.m-row').forEach(function(r){ r.onclick=function(){ openSoDetail(r.getAttribute('data-id')); }; });
+    return;
+  }
+  box.innerHTML='<div class="txtable-wrap"><table class="txt" style="min-width:900px"><thead><tr><th>下單時間</th><th>客戶</th><th>品項</th><th style="text-align:right">金額</th><th>付款</th><th>狀態</th><th>訂單編號</th><th>末5碼</th><th>收件資訊／備註</th><th></th></tr></thead><tbody>'+
+    rows.map(function(t){
+      var c=custById(t.customer_id);
+      var opt=SHOP_ST.map(function(x){ return '<option value="'+x[0]+'"'+(t.status===x[0]?' selected':'')+'>'+x[1]+'</option>'; }).join('');
+      return '<tr data-id="'+t.id+'"><td class="muted">'+fmtDate(t.created_at)+'</td><td>'+esc(c?custLabel(c):'(已刪客戶)')+'</td><td>'+esc(String(t.service).replace(/^商品：/,''))+'</td><td class="num">'+money(t.amount)+'</td><td>'+esc(t.method||'—')+'</td><td><select class="tin" data-sost>'+opt+'</select></td><td class="ref">'+esc(t.order_ref||'—')+'</td><td class="ref">'+esc(t.pay_last5||'—')+'</td><td style="font-size:12px;color:var(--soft);min-width:220px">'+esc(String(t.notes||'').replace(/^［商品訂單］/,''))+'</td><td><button class="txdel" data-sodel title="刪除">✕</button></td></tr>';
+    }).join('')+'</tbody></table></div><div class="txsaved" id="so-saved"></div>';
+  box.querySelectorAll('tr[data-id]').forEach(function(tr){
+    var id=tr.getAttribute('data-id');
+    tr.querySelector('[data-sost]').onchange=async function(){ var v=this.value, sv=$('#so-saved'); if(sv){ sv.textContent='儲存中…'; sv.style.color='var(--soft)'; }
+      var r=await db.from('transactions').update({status:v}).eq('id',id);
+      if(r.error){ if(sv){ sv.textContent='存檔失敗：'+r.error.message; sv.style.color='#C0506A'; } return; }
+      var t=TX.find(function(x){ return x.id===id; }); if(t) t.status=v; if(sv){ sv.textContent='已儲存'; sv.style.color='#4F8E6E'; setTimeout(function(){ sv.textContent=''; },1200); }
+      render(); renderReport(); renderShopOrders(); };
+    tr.querySelector('[data-sodel]').onclick=async function(){ if(!confirm('刪除這筆商品訂單？會移到「刪除紀錄」，可還原。')) return; if(await softDelete('transactions',id,TX)){ renderTx(); render(); renderTrash(); renderShopOrders(); } };
+  });
+}
+function soExportCSV(){
+  function cell(v){ v=(v==null?'':String(v)); return '"'+v.replace(/"/g,'""')+'"'; }
+  var L=[['下單時間','客戶','品項','金額','付款','狀態','訂單編號','末5碼','收件資訊／備註'].map(cell).join(',')];
+  soFiltered().forEach(function(t){ var c=custById(t.customer_id); L.push([fmtDate(t.created_at),c?custLabel(c):'',String(t.service).replace(/^商品：/,''),Number(t.amount||0),t.method||'',shopStLabel(t.status),t.order_ref||'',t.pay_last5||'',String(t.notes||'').replace(/^［商品訂單］/,'')].map(cell).join(',')); });
+  var blob=new Blob(['\ufeff'+L.join('\r\n')],{type:'text/csv;charset=utf-8'}), url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download='彩之語商品訂單.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(url); },800);
+}
+(function(){
+  document.querySelectorAll('[data-shopv]').forEach(function(b){ b.onclick=function(){
+    var v=b.getAttribute('data-shopv'); document.querySelectorAll('[data-shopv]').forEach(function(x){ x.classList.toggle('on',x===b); });
+    $('#shop-items').style.display=v==='items'?'block':'none'; $('#shop-orders').style.display=v==='orders'?'block':'none';
+    if(v==='orders') renderShopOrders();
+  }; });
+  ['so-fstatus','so-search'].forEach(function(id){ var e=document.getElementById(id); if(e){ e.addEventListener('input',renderShopOrders); e.addEventListener('change',renderShopOrders); } });
+  var ex=document.getElementById('so-export'); if(ex) ex.onclick=soExportCSV;
+})();
+
+/* ===== 軟刪除 + 刪除紀錄 ===== */
+function activeArr(tbl){ return tbl==='customers'?ALL:tbl==='guides'?GUIDES:tbl==='transactions'?TX:TOPUPS; }
+async function softDelete(tbl,id,arr,quiet){
+  var r=await db.from(tbl).update({deleted:true}).eq('id',id);
+  if(r.error){ if(!quiet) alert('刪除失敗：'+r.error.message); return false; }
+  var i=arr.findIndex(function(x){return x.id===id;});
+  if(i>=0){ var o=arr[i]; o.deleted=true; arr.splice(i,1); DEL[tbl].unshift(o); }
+  return true;
+}
+function cAny(id){ return custById(id) || DEL.customers.find(function(x){return x.id===id;}); }
+function renderTrash(){
+  var list=document.getElementById('trashlist'); if(!list) return;
+  var items=[];
+  DEL.customers.forEach(function(c){ items.push({t:'客戶',lbl:custLabel(c),sub:fmtDate(c.created_at),tbl:'customers',id:c.id,reason:c.delete_reason||''}); });
+  DEL.guides.forEach(function(g){ items.push({t:'引路人',lbl:guideLabel(g),sub:(g.email||g.phone||''),tbl:'guides',id:g.id,reason:g.delete_reason||''}); });
+  DEL.transactions.forEach(function(t){ var c=cAny(t.customer_id); items.push({t:'交易',lbl:(c?custLabel(c):'客戶')+'　'+(t.service||'—')+'　'+money(t.amount),sub:(t.appointment_at?fmtAppt(t.appointment_at):'')+(t.method?' · '+t.method:''),tbl:'transactions',id:t.id,reason:t.delete_reason||''}); });
+  DEL.topups.forEach(function(t){ var c=cAny(t.customer_id); items.push({t:'儲值',lbl:(c?custLabel(c):'客戶')+'　'+money(t.amount),sub:fmtDay(t.created_at)+(t.method?' · '+t.method:''),tbl:'topups',id:t.id,reason:t.delete_reason||''}); });
+  document.getElementById('trash-count').textContent='共 '+items.length+' 筆已刪除（可還原）';
+  if(!items.length){ list.innerHTML='<div class="muted" style="padding:30px;text-align:center">目前沒有被刪除的資料</div>'; return; }
+  list.innerHTML='<div class="trbulk" id="tr-bulk"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px"><input type="checkbox" id="tr-ckall">全選</label><span style="font-size:13px">已選 <b id="tr-cksel">0</b> 筆</span><span style="flex:1"></span><button class="abtn" id="tr-bulkrestore" disabled>還原選取</button><button class="bulkdel" id="tr-bulkpurge" disabled>永久刪除選取</button></div>'+
+    items.map(function(it){ return '<div class="cust" data-tbl="'+it.tbl+'" data-id="'+it.id+'"><div class="cust-top"><label style="display:flex;flex-direction:row;align-items:center;gap:8px;cursor:pointer;min-width:0"><input type="checkbox" class="tr-ck" style="flex-shrink:0"><span style="min-width:0"><span class="src-badge" style="background:#EDE6DC;color:#8A7659">'+it.t+'</span> <b>'+esc(it.lbl)+'</b></span></label><div class="meta">'+esc(it.sub)+'</div></div><label class="notes-l" style="margin-top:0"><input class="in" data-reason value="'+esc(it.reason)+'" placeholder="刪除原因（選填）…"></label><div class="cust-actions"><span class="saved" data-rsaved></span><button class="abtn" data-restore>還原</button><button class="del" data-purge>永久刪除</button></div></div>'; }).join('');
+  document.querySelectorAll('#trashlist .cust').forEach(function(row){
+    var tbl=row.getAttribute('data-tbl'), id=row.getAttribute('data-id');
+    var ri=row.querySelector('[data-reason]');
+    if(ri) ri.addEventListener('change',async function(){ var sv=row.querySelector('[data-rsaved]'); if(sv){sv.textContent='儲存中…';sv.style.color='var(--soft)';} var rr=await db.from(tbl).update({delete_reason:ri.value}).eq('id',id); if(rr.error){ if(sv){sv.textContent='存檔失敗';sv.style.color='#C0506A';} } else { var o=DEL[tbl].find(function(x){return x.id===id;}); if(o)o.delete_reason=ri.value; if(sv){sv.textContent='已儲存';sv.style.color='#4F8E6E';setTimeout(function(){sv.textContent='';},1200);} } });
+    row.querySelector('[data-restore]').onclick=async function(){
+      var r=await db.from(tbl).update({deleted:false}).eq('id',id);
+      if(r.error){ alert('還原失敗：'+r.error.message); return; }
+      var i=DEL[tbl].findIndex(function(x){return x.id===id;});
+      if(i>=0){ var o=DEL[tbl][i]; o.deleted=false; DEL[tbl].splice(i,1); activeArr(tbl).unshift(o); }
+      render(); renderGuides(); renderTx(); renderReport(); renderTrash(); fillSelects();
+    };
+    row.querySelector('[data-purge]').onclick=async function(){
+      if(!confirm('永久刪除這筆？這次真的無法還原。'))return;
+      var r=await db.from(tbl).delete().eq('id',id);
+      if(r.error){ alert('刪除失敗：'+r.error.message); return; }
+      var i=DEL[tbl].findIndex(function(x){return x.id===id;}); if(i>=0)DEL[tbl].splice(i,1);
+      renderTrash();
+    };
+  });
+  var trAll=document.getElementById('tr-ckall');
+  if(trAll) trAll.onclick=function(){ document.querySelectorAll('#trashlist .tr-ck').forEach(function(c){ c.checked=trAll.checked; }); updateTrBulk(); };
+  document.querySelectorAll('#trashlist .tr-ck').forEach(function(c){ c.onclick=updateTrBulk; });
+  function trSel(){ return Array.prototype.map.call(document.querySelectorAll('#trashlist .tr-ck:checked'),function(c){ var row=c.closest('.cust'); return row?{tbl:row.getAttribute('data-tbl'),id:row.getAttribute('data-id')}:null; }).filter(Boolean); }
+  var rb=document.getElementById('tr-bulkrestore');
+  if(rb) rb.onclick=async function(){ var sel=trSel(); if(!sel.length) return; rb.disabled=true; rb.textContent='還原中…'; var fail=0;
+    for(var i=0;i<sel.length;i++){ var tbl=sel[i].tbl,id=sel[i].id; var r=await db.from(tbl).update({deleted:false}).eq('id',id); if(r.error){ fail++; } else { var j=DEL[tbl].findIndex(function(x){return x.id===id;}); if(j>=0){ var o=DEL[tbl][j]; o.deleted=false; DEL[tbl].splice(j,1); activeArr(tbl).unshift(o); } } }
+    render(); renderGuides(); renderTx(); renderReport(); renderTrash(); fillSelects(); if(fail) alert('有 '+fail+' 筆還原失敗。'); };
+  var pb=document.getElementById('tr-bulkpurge');
+  if(pb) pb.onclick=async function(){ var sel=trSel(); if(!sel.length) return; if(!confirm('永久刪除選取的 '+sel.length+' 筆？這次真的無法還原。')) return; pb.disabled=true; pb.textContent='刪除中…';
+    var pr={transactions:0,topups:0,guides:1,customers:2}; sel.sort(function(a,b){ return (pr[a.tbl]||0)-(pr[b.tbl]||0); });
+    var fail=0;
+    for(var i=0;i<sel.length;i++){ var tbl=sel[i].tbl,id=sel[i].id; var r=await db.from(tbl).delete().eq('id',id); if(r.error){ fail++; } else { var j=DEL[tbl].findIndex(function(x){return x.id===id;}); if(j>=0)DEL[tbl].splice(j,1); } }
+    renderTrash(); if(fail) alert('有 '+fail+' 筆永久刪除失敗（可能仍被其他資料參照）。'); };
+  updateTrBulk();
+}
+function updateTrBulk(){
+  var cks=document.querySelectorAll('#trashlist .tr-ck'), sel=document.querySelectorAll('#trashlist .tr-ck:checked'), n=sel.length;
+  var cs=document.getElementById('tr-cksel'); if(cs) cs.textContent=n;
+  var rb=document.getElementById('tr-bulkrestore'); if(rb){ rb.disabled=(n===0); if(n===0) rb.textContent='還原選取'; }
+  var pb=document.getElementById('tr-bulkpurge'); if(pb){ pb.disabled=(n===0); if(n===0) pb.textContent='永久刪除選取'; }
+  var all=document.getElementById('tr-ckall'); if(all){ all.checked=(cks.length>0 && n===cks.length); all.indeterminate=(n>0 && n<cks.length); }
+}
+
+/* ===== 通知鈴鐺 ===== */
+var NOTIF=[], nFilter='all', notifPollStarted=false;
+function seenTs(){ try{ return localStorage.getItem('rw_notif_seen')||''; }catch(e){ return ''; } }
+function setSeen(v){ try{ localStorage.setItem('rw_notif_seen',v); }catch(e){} }
+function relTime(s){
+  if(!s) return '';
+  var d=new Date(s), now=new Date(), diff=(now-d)/1000;
+  if(diff<0) diff=0;
+  if(diff<60) return '剛剛';
+  if(diff<3600) return Math.floor(diff/60)+' 分鐘前';
+  if(diff<86400) return Math.floor(diff/3600)+' 小時前';
+  if(diff<604800) return Math.floor(diff/86400)+' 天前';
+  return (d.getMonth()+1)+'/'+d.getDate();
+}
+function buildNotifs(C,G,T){
+  var n=[];
+  (C||[]).forEach(function(c){
+    var isM=(c.source==='會員');
+    n.push({
+      kind:isM?'member':'quiz', cat:isM?'member':'quiz', ts:c.created_at,
+      tag:isM?'新會員加入':'過路客完成測驗', color:isM?'#6FB58C':'#7FA9C4', tcolor:isM?'#3F7A5E':'#5A7A94',
+      main:(c.name?esc(c.name):(isM?'新會員':'過路客'))+(c.result_type?'　·　'+esc(c.result_type):''),
+      sub:'代碼 '+esc(c.ref_code||'—')+(c.topic?'　·　'+esc(c.topic):'')+(c.contact?'　·　'+esc(c.contact):''),
+      tab:'customers', id:c.id
+    });
+  });
+  (G||[]).forEach(function(g){
+    if(!g.pending) return;
+    n.push({
+      kind:'guide', cat:'member', ts:g.created_at,
+      tag:'新引路人申請', color:'#D8A85A', tcolor:'#A5643A',
+      main:(g.name?esc(g.name):'（未具名）'),
+      sub:'待申請上架'+((g.services&&g.services.length)?'　·　'+esc(g.services.join('、')):''),
+      tab:'guides', id:g.id
+    });
+  });
+  (T||[]).forEach(function(t){
+    if(t.status!=='已預約') return;
+    var c=(C||[]).find(function(x){return x.id===t.customer_id;});
+    var gg=(G||[]).find(function(x){return x.id===t.guide_id;});
+    n.push({
+      kind:'booking', cat:'booking', ts:t.created_at,
+      tag:'新預約', color:'#B49BDD', tcolor:'#6E4F9E',
+      main:(c?esc(custLabel(c)):(t.guest_name?esc(t.guest_name)+'（訪客）':'客戶'))+(t.service?'　·　'+esc(t.service):''),
+      sub:(gg?esc(guideLabel(gg)):'未指定引路人')+'　·　'+(t.appointment_at?fmtApptFull(t.appointment_at):'未定時間')+'　·　'+money(t.amount),
+      tab:'tx', id:t.id
+    });
+  });
+  n.sort(function(a,b){ return new Date(b.ts||0)-new Date(a.ts||0); });
+  NOTIF=n.slice(0,60);
+  renderBell();
+}
+function unreadCount(){ var s=seenTs(); if(!s) return 0; return NOTIF.filter(function(x){ return x.ts && new Date(x.ts)>new Date(s); }).length; }
+function updateBadge(){ var b=$('#bell-badge'); if(!b) return; var u=unreadCount(); b.textContent=u>99?'99+':u; b.classList.toggle('show',u>0); }
+function renderBell(){ updateBadge(); if($('#npanel').classList.contains('open')) renderPanel(); }
+function renderPanel(prevSeen){
+  var list=$('#nlist'); if(!list) return;
+  var prev=(prevSeen!==undefined)?prevSeen:seenTs();
+  var rows=NOTIF.filter(function(x){ return nFilter==='all'||x.cat===nFilter; });
+  if(!rows.length){ list.innerHTML='<div class="nempty">目前沒有'+(nFilter==='all'?'':'這類')+'通知</div>'; return; }
+  list.innerHTML=rows.map(function(x){
+    var isNew=prev && x.ts && new Date(x.ts)>new Date(prev);
+    return '<div class="nitem'+(isNew?' unread':'')+'" data-tab="'+x.tab+'" data-kind="'+x.kind+'">'+
+      '<span class="ndot" style="background:'+x.color+'"></span>'+
+      '<div class="nbody"><div class="ntop"><span class="ntag" style="color:'+x.tcolor+'">'+x.tag+'</span><span class="ntime">'+relTime(x.ts)+'</span></div>'+
+      '<div class="nmain">'+x.main+'</div>'+
+      (x.sub?'<div class="nsub">'+x.sub+'</div>':'')+
+      '</div></div>';
+  }).join('');
+  list.querySelectorAll('.nitem').forEach(function(row){
+    row.onclick=function(){
+      var tab=row.getAttribute('data-tab'), kind=row.getAttribute('data-kind');
+      closeBell();
+      var tb=document.querySelector('.tabbar [data-tab="'+tab+'"]'); if(tb) tb.click();
+      if(kind==='guide'){ var gf=$('#g-filter'); if(gf){ gf.value='待申請'; renderGuides(); } }
+    };
+  });
+}
+function openBell(){ var prev=seenTs(); setSeen(new Date().toISOString()); $('#npanel').classList.add('open'); renderPanel(prev); updateBadge(); }
+function closeBell(){ $('#npanel').classList.remove('open'); }
+(function(){
+  var bell=$('#bell'); if(!bell) return;
+  bell.onclick=function(e){ e.stopPropagation(); if($('#npanel').classList.contains('open')) closeBell(); else openBell(); };
+  $('#npanel').onclick=function(e){ e.stopPropagation(); };
+  document.addEventListener('click',function(){ closeBell(); });
+  $('#n-readall').onclick=function(e){ e.stopPropagation(); setSeen(new Date().toISOString()); renderPanel(seenTs()); renderBell(); };
+  $('#n-filters').addEventListener('click',function(e){ var c=e.target.closest('.nchip'); if(!c)return; e.stopPropagation(); nFilter=c.getAttribute('data-nf'); document.querySelectorAll('#n-filters .nchip').forEach(function(x){x.classList.toggle('on',x===c);}); renderPanel(); });
+})();
+async function pollNotif(){
+  try{
+    var res=await Promise.all([
+      db.from('customers').select('id,name,contact,source,result_type,ref_code,topic,created_at,deleted').order('created_at',{ascending:false}).limit(80),
+      db.from('guides').select('id,name,services,pending,created_at,deleted').order('created_at',{ascending:false}).limit(80),
+      db.from('transactions').select('id,customer_id,guide_id,service,appointment_at,amount,status,guest_name,created_at,deleted').order('created_at',{ascending:false}).limit(80)
+    ]);
+    var nd=function(x){return !x.deleted;};
+    buildNotifs((res[0].data||[]).filter(nd),(res[1].data||[]).filter(nd),(res[2].data||[]).filter(nd));
+  }catch(e){}
+}
+function startNotifPoll(){ if(notifPollStarted) return; notifPollStarted=true; setInterval(pollNotif,45000); }
+
+/* ===== 行事曆：所有引路人的預約（點一筆看交易明細）===== */
+var CAL={y:0,m:0,sel:'',g:''}, CAL_SLOTS=null;
+var CAL_COLORS=['#B49AC8','#E8927C','#7FB8C9','#E2B65C','#8CC49A','#D98BB0','#9A9FDB','#C9A27A'];
+function calGuides(){ return GUIDES.filter(function(g){ return !g.pending; }).sort(function(a,b){ return new Date(a.created_at||0)-new Date(b.created_at||0); }); }
+function calColor(gid){ var gs=calGuides(); for(var i=0;i<gs.length;i++){ if(gs[i].id===gid) return CAL_COLORS[i%CAL_COLORS.length]; } return '#C9BBA4'; }
+function dayKeyOf(s){ var p=wpart(s); return p?p.y+'-'+gsP2(p.mo)+'-'+gsP2(p.d):''; }
+function hmOf(s){ var p=wpart(s); return p?gsP2(p.h)+':'+gsP2(p.mi):''; }
+function calLive(t){ return t.status!=='已取消' && t.status!=='已退費'; }
+function calBookings(){ return TX.filter(function(t){ return !isShopTx(t) && t.appointment_at && (!CAL.g || t.guide_id===CAL.g); }); }
+function renderCal(loadSlots){
+  if(!$('#acal-days')) return;
+  if(!CAL.y){ var now=new Date(); CAL.y=now.getFullYear(); CAL.m=now.getMonth()+1; CAL.sel=gsToday(); }
+  var gs=calGuides();
+  if(CAL.g && !gs.some(function(g){ return g.id===CAL.g; })) CAL.g='';
+  $('#acal-chips').innerHTML='<button type="button" class="acal-chip'+(CAL.g?'':' on')+'" data-g="">全部引路人</button>'+gs.map(function(g){ return '<button type="button" class="acal-chip'+(CAL.g===g.id?' on':'')+'" data-g="'+g.id+'"><i style="background:'+calColor(g.id)+'"></i>'+esc(guideLabel(g))+'</button>'; }).join('');
+  var by={}, inMonth={}, mk=CAL.y+'-'+gsP2(CAL.m)+'-';
+  calBookings().forEach(function(t){ if(!calLive(t)) return; var k=dayKeyOf(t.appointment_at); if(!k) return; var o=by[k]||(by[k]={n:0,g:[]}); o.n++; var gk=t.guide_id||''; if(o.g.indexOf(gk)<0) o.g.push(gk); if(k.indexOf(mk)===0) inMonth[gk]=1; });
+  $('#acal-title').textContent=CAL.y+' 年 '+CAL.m+' 月';
+  var first=new Date(CAL.y,CAL.m-1,1).getDay(), days=new Date(CAL.y,CAL.m,0).getDate(), today=gsToday(), h='';
+  for(var i=0;i<first;i++) h+='<span class="acal-d out"></span>';
+  for(var d=1;d<=days;d++){
+    var k=mk+gsP2(d), o=by[k];
+    h+='<button type="button" class="acal-d'+(k===today?' today':'')+(k===CAL.sel?' sel':'')+'" data-k="'+k+'">'+(o?'<span class="cnt">'+o.n+'</span>':'')+d+'<span class="dots">'+(o?o.g.slice(0,4).map(function(gk){ return '<i style="background:'+calColor(gk)+'"></i>'; }).join(''):'')+'</span></button>';
+  }
+  $('#acal-days').innerHTML=h;
+  var lg=Object.keys(inMonth).map(function(gk){ return '<span><i style="background:'+calColor(gk)+'"></i>'+esc(gk?guideName(gk):'未指定')+'</span>'; }).join('');
+  $('#acal-legend').innerHTML=lg+'<span>數字＝當天預約數</span><button type="button" class="acal-today" id="acal-today">回到今天</button>';
+  drawCalDetail();
+  if(loadSlots && CAL_SLOTS===null) loadCalSlots();
+}
+async function loadCalSlots(){
+  CAL_SLOTS={};
+  var gs=calGuides().filter(function(g){ return g.active; });
+  await Promise.all(gs.map(async function(g){ try{ var r=await fetchGuideSlots(g.id); CAL_SLOTS[g.id]=r.rows; }catch(e){} }));
+  if(activeTab==='cal') drawCalDetail();
+}
+function drawCalDetail(){
+  var box=$('#acal-detail'), k=CAL.sel; if(!box) return;
+  if(!k){ box.innerHTML='<div class="acal-empty">點月曆上的日期看當天預約</div>'; return; }
+  var pr=k.split('-'), w='日一二三四五六'.charAt(new Date(+pr[0],+pr[1]-1,+pr[2]).getDay());
+  var items=calBookings().filter(function(t){ return dayKeyOf(t.appointment_at)===k; }).sort(function(a,b){ return String(a.appointment_at).localeCompare(String(b.appointment_at)); });
+  var h='<div class="acal-dt">'+(+pr[1])+'/'+(+pr[2])+'（'+w+'）'+(k===gsToday()?'　今天':'')+'　共 '+items.filter(calLive).length+' 筆</div>';
+  h+=items.length?items.map(function(t){
+    var c=custById(t.customer_id), cname=c?adName(c):(t.guest_name?esc(t.guest_name)+'（訪客）':'(已刪客戶)'), col=calColor(t.guide_id);
+    var sub=[esc(t.method||''), (t.method==='匯款'&&t.pay_last5)?'末五碼 '+esc(t.pay_last5):'', esc(t.order_ref||'')].filter(Boolean).join('・');
+    return '<button type="button" class="acal-it'+(calLive(t)?'':' off')+'" data-txid="'+t.id+'"><span class="t">'+hmOf(t.appointment_at)+'</span><span class="m"><span class="acal-gp" style="background:'+col+'3A">'+esc(t.guide_id?guideName(t.guide_id):'未指定')+'</span>'+cname+'　'+esc(t.service||'')+(sub?'<small>'+sub+'</small>':'')+'</span>'+statusBadge(t.status)+'<span class="acal-go">›</span></button>';
+  }).join(''):'<div class="acal-empty">這天沒有預約</div>';
+  if(CAL_SLOTS===null) h+='<div class="acal-open">開放中的時段載入中…</div>';
+  else {
+    var open=[];
+    Object.keys(CAL_SLOTS).forEach(function(gid){ if(CAL.g && gid!==CAL.g) return; (CAL_SLOTS[gid]||[]).forEach(function(s){ if(!s.taken && dayKeyOf(s.slot_at)===k) open.push({gid:gid,at:String(s.slot_at)}); }); });
+    open.sort(function(a,b){ return a.at.localeCompare(b.at); });
+    if(open.length) h+='<div class="acal-open">還開放中的時段<br>'+open.map(function(o){ return '<span>'+esc(guideName(o.gid))+' '+hmOf(o.at)+'</span>'; }).join('')+'</div>';
+  }
+  box.innerHTML=h;
+}
+(function(){
+  var pv=$('#acal-prev'), nx=$('#acal-next'); if(!pv) return;
+  pv.onclick=function(){ CAL.m--; if(CAL.m<1){ CAL.m=12; CAL.y--; } renderCal(); };
+  nx.onclick=function(){ CAL.m++; if(CAL.m>12){ CAL.m=1; CAL.y++; } renderCal(); };
+  $('#acal-chips').addEventListener('click',function(e){ var c=e.target.closest('[data-g]'); if(!c) return; CAL.g=c.getAttribute('data-g'); renderCal(); });
+  $('#acal-days').addEventListener('click',function(e){ var c=e.target.closest('[data-k]'); if(!c) return; CAL.sel=c.getAttribute('data-k'); renderCal(); if(isM()){ var dt=$('#acal-detail'); if(dt) dt.scrollIntoView({behavior:'smooth',block:'start'}); } });
+  $('#acal-legend').addEventListener('click',function(e){ if(!e.target.closest('#acal-today')) return; var now=new Date(); CAL.y=now.getFullYear(); CAL.m=now.getMonth()+1; CAL.sel=gsToday(); renderCal(); });
+  $('#acal-detail').addEventListener('click',function(e){ var c=e.target.closest('[data-txid]'); if(c) openTxDetail(c.getAttribute('data-txid')); });
+})();
+
+/* ===== 手機版：條列選單 → 點進去（跟引路人後台一樣，看得到全部紀錄）===== */
+var MQ=window.matchMedia?window.matchMedia('(max-width:640px)'):null;
+function isM(){ return !!(MQ && MQ.matches); }
+var MMENU=[
+  {t:'cal',n:'行事曆',ic:'📅',bg:'#FBE7CC'},
+  {t:'customers',n:'客戶管理',ic:'👥',bg:'#E7DBF4'},
+  {t:'guides',n:'引路人管理',ic:'🌈',bg:'#EAD9F2'},
+  {t:'tx',n:'交易紀錄',ic:'🧾',bg:'#F4EAD4'},
+  {t:'report',n:'報表',ic:'📊',bg:'#F6DDE3'},
+  {t:'shop',n:'商品管理',ic:'🛍️',bg:'#DCEAF2'},
+  {t:'trash',n:'刪除紀錄',ic:'🗑️',bg:'#EDE6DC'}
+];
+var MCARD={};
+function goTab(t){ var b=document.querySelector('.tabbar [data-tab="'+t+'"]'); if(b) b.click(); }
+function mGoHome(){ mLeaveDetails(); document.body.classList.add('m-at-home'); renderMHome(); window.scrollTo(0,0); }
+function mF(l,v){ return '<div class="m-f"><span>'+l+'</span><span>'+v+'</span></div>'; }
+function renderMHome(){
+  var box=$('#m-menu'); if(!box) return;
+  var today=gsToday();
+  var nToday=TX.filter(function(t){ return !isShopTx(t) && t.appointment_at && dayKeyOf(t.appointment_at)===today && calLive(t); }).length;
+  var nReview=GUIDES.filter(function(g){ return g.pending; }).length+GPLANS.filter(function(p){ return !p.approved; }).length;
+  var nShip=shopOrders().filter(function(t){ return t.status==='已預約'; }).length;
+  var wk=Date.now()-7*864e5, nNew=ALL.filter(function(c){ return c.created_at && new Date(c.created_at).getTime()>=wk; }).length;
+  var nDel=DEL.customers.length+DEL.guides.length+DEL.transactions.length+DEL.topups.length;
+  $('#m-today').innerHTML='<button type="button" data-mgo="cal"><b>'+nToday+'</b>今天預約</button><button type="button" data-mgo="guides"'+(nReview?' class="warn"':'')+'><b>'+nReview+'</b>待審核</button><button type="button" data-mgo="shop-orders"'+(nShip?' class="warn"':'')+'><b>'+nShip+'</b>待出貨</button><button type="button" data-mgo="customers"><b>'+nNew+'</b>本週新客</button>';
+  var sub={cal:'今天 '+nToday+' 筆預約・所有引路人一眼看完', customers:'全部 '+ALL.length+' 位客戶・測驗結果・餘額', guides:'共 '+GUIDES.length+' 位・資料、開放時段、方案審核', tx:'全部預約＋儲值，可改狀態', report:'每位引路人業績・匯出', shop:'商品清單・商品訂單', trash:nDel?nDel+' 筆，可以還原':'刪掉的資料可以還原'};
+  var badge={guides:nReview, shop:nShip};
+  box.innerHTML=MMENU.map(function(m){ return '<button type="button" data-mgo="'+m.t+'"><span class="gm-ic" style="background:'+m.bg+'">'+m.ic+'</span><span class="gm-t">'+m.n+'<small>'+sub[m.t]+'</small></span>'+(badge[m.t]?'<span class="gm-n">'+badge[m.t]+'</span>':'')+'<span class="gm-go">›</span></button>'; }).join('');
+}
+function mDetail(secId,title,html,bind,onBack){
+  var sec=document.getElementById(secId); if(!sec) return;
+  mCloseDetail(sec);
+  var d=sec.querySelector(':scope > .m-detail'); if(!d){ d=document.createElement('div'); d.className='m-detail'; sec.appendChild(d); }
+  d.innerHTML='<div class="m-top"><button type="button" class="m-back">‹ '+(onBack?'返回':'回列表')+'</button><span class="m-h">'+esc(title)+'</span></div>'+html;
+  sec.classList.add('m-in-det');
+  d.querySelector('.m-back').onclick=function(){ if(onBack) onBack(); else { mCloseDetail(sec); window.scrollTo(0,0); } };
+  if(bind) bind(d);
+  window.scrollTo(0,0);
+}
+function mCloseDetail(sec){
+  if(!sec) return;
+  sec.classList.remove('m-in-det','m-card-det');
+  sec.querySelectorAll('.m-open').forEach(function(c){ c.classList.remove('m-open'); c.classList.add('collapsed'); });
+  var host=sec.querySelector('.m-cardhost'); if(host) delete MCARD[host.id];
+  var d=sec.querySelector(':scope > .m-detail'); if(d) d.innerHTML='';
+}
+function mLeaveDetails(){ document.querySelectorAll('.wrap > section').forEach(mCloseDetail); }
+function mOpenCard(card){
+  if(!card) return;
+  var host=card.closest('.m-cardhost'), sec=card.closest('section'); if(!host || !sec) return;
+  if(card.classList.contains('m-open')) return;
+  host.querySelectorAll('.m-open').forEach(function(c){ c.classList.remove('m-open'); c.classList.add('collapsed'); });
+  card.classList.add('m-open'); card.classList.remove('collapsed');
+  sec.classList.add('m-card-det'); MCARD[host.id]=card.getAttribute('data-id');
+  window.scrollTo(0,0);
+}
+function mRestoreCard(hostId){
+  var host=document.getElementById(hostId), sec=host && host.closest('section');
+  if(!sec || !sec.classList.contains('m-card-det')) return;
+  var card=host.querySelector('.cust[data-id="'+MCARD[hostId]+'"]');
+  if(card){ card.classList.add('m-open'); card.classList.remove('collapsed'); } else mCloseDetail(sec);
+}
+// 交易明細：手機開明細頁；電腦跳到交易紀錄並標亮那一列
+function openTxDetail(id,kind){
+  var tp=(kind==='topup'), t=(tp?TOPUPS:TX).find(function(x){ return x.id===id; }); if(!t) return;
+  var from=activeTab;
+  if(!tp && isShopTx(t)){ goTab('shop'); var ob=document.querySelector('[data-shopv="orders"]'); if(ob) ob.click(); if(isM()) openSoDetail(id,from!=='shop'?from:''); return; }
+  goTab('tx');
+  if(isM()){
+    var o=tp?Object.assign({_kind:'topup'},t):t;
+    mDetail('tab-tx','交易明細',txDetailHtml(o),function(d){
+      bindTxRow(d.querySelector('.m-card'),d.querySelector('.m-saved'));
+      var cb=d.querySelector('[data-mcust]'); if(cb) cb.onclick=function(){ openCustDetail(t.customer_id); };
+    },from!=='tx'?function(){ goTab(from); }:null);
+    return;
+  }
+  ['tx-ffrom','tx-fto','tx-ftype','tx-fstatus','tx-fguide','tx-fmethod'].forEach(function(x){ var e=document.getElementById(x); if(e) e.value=''; });
+  $('#tx-search').value=t.order_ref||''; renderTx();
+  var tr=document.querySelector('#txlist tr[data-id="'+id+'"]');
+  if(tr){ tr.scrollIntoView({block:'center',behavior:'smooth'}); tr.classList.add('flash'); setTimeout(function(){ tr.classList.remove('flash'); },2300); }
+}
+function txDetailHtml(t){
+  var tp=isTopup(t), c=custById(t.customer_id);
+  var cname=c?adName(c):(t.guest_name?esc(t.guest_name)+'（訪客）':'(已刪客戶)');
+  function sel(f,opts,cur){ return '<select class="in" data-f="'+f+'">'+opts.map(function(o){ return '<option'+(cur===o?' selected':'')+'>'+o+'</option>'; }).join('')+'</select>'; }
+  var notes=mF('備註','<input class="in" data-f="notes" value="'+esc(t.notes)+'" placeholder="—">');
+  var h='<div class="m-card" data-id="'+t.id+'"'+(tp?' data-kind="topup"':'')+'><div class="hd"><b>'+cname+'　'+(tp?'儲值':esc(t.service||'—'))+'</b><span class="am">'+(tp?'+':'')+money(t.amount)+'</span></div>';
+  if(tp){
+    h+=mF('日期',fmtFull(t.created_at))+mF('金額','<input class="in" data-f="amount" type="number" value="'+esc(t.amount)+'">')+mF('方式',sel('method',['現金','刷卡','匯款'],t.method))+notes;
+  } else {
+    var contact=c?[c.contact,c.phone].filter(Boolean).join('・'):(t.guest_contact||'');
+    h+=mF('引路人',esc(guideName(t.guide_id)))+mF('預約時間',t.appointment_at?fmtApptFull(t.appointment_at):'未定時間')
+      +mF('項目','<input class="in" data-f="service" value="'+esc(t.service)+'" placeholder="—">')
+      +mF('金額','<input class="in" data-f="amount" type="number" value="'+esc(t.amount)+'">')
+      +mF('付款方式',sel('method',['現金','刷卡','匯款','儲值'],t.method))
+      +mF('狀態',sel('status',['已預約','已完成','未出席','已取消','已退費'],t.status))
+      +mF('訂單編號',esc(t.order_ref||'—'))
+      +((t.method==='匯款'&&t.pay_last5)?mF('匯款末五碼',esc(t.pay_last5)):'')
+      +(contact?mF('客人聯絡',esc(contact)):'')
+      +(t.reschedule_count!=null?mF('改期次數',(t.reschedule_count||0)+' 次'):'')
+      +mF('下單日',fmtFull(t.created_at))+notes;
+  }
+  return h+'<div class="m-saved"></div><div class="m-btns">'+(c?'<button type="button" data-mcust>看這位客人</button>':'')+'<button type="button" class="dl" data-del>刪除</button></div></div>';
+}
+function txMRow(t){
+  var tp=isTopup(t), c=custById(t.customer_id);
+  var cname=c?adName(c):(t.guest_name?esc(t.guest_name)+'（訪客）':'(已刪客戶)');
+  var sub=tp?fmtFull(t.created_at)+'・'+esc(t.method||''):esc(guideName(t.guide_id))+'・'+(t.appointment_at?fmtAppt(t.appointment_at):'未定時間');
+  return '<button type="button" class="m-row" data-id="'+t.id+'"'+(tp?' data-kind="topup"':'')+'><span class="mn"><b>'+cname+'</b>　'+(tp?'儲值':esc(t.service||'—'))+'<small>'+sub+'</small></span><span class="rt"><span class="am"'+(tp?' style="color:#3F7A5E"':'')+'>'+(tp?'+':'')+money(t.amount)+'</span>'+(tp?'<span class="status-badge st-topup">儲值</span>':statusBadge(t.status))+'</span><span class="go">›</span></button>';
+}
+function soMRow(t){
+  var c=custById(t.customer_id);
+  return '<button type="button" class="m-row" data-id="'+t.id+'"><span class="mn"><b>'+(c?adName(c):'(已刪客戶)')+'</b><small>'+esc(String(t.service).replace(/^商品：/,''))+'</small><small>'+fmtDate(t.created_at)+(t.order_ref?'・'+esc(t.order_ref):'')+'</small></span><span class="rt"><span class="am">'+money(t.amount)+'</span>'+statusBadge(shopStLabel(t.status))+'</span><span class="go">›</span></button>';
+}
+function openSoDetail(id,backTab){
+  var t=TX.find(function(x){ return x.id===id; }); if(!t) return;
+  var c=custById(t.customer_id);
+  var opt=SHOP_ST.map(function(x){ return '<option value="'+x[0]+'"'+(t.status===x[0]?' selected':'')+'>'+x[1]+'</option>'; }).join('');
+  var h='<div class="m-card"><div class="hd"><b>'+(c?adName(c):'(已刪客戶)')+'</b><span class="am">'+money(t.amount)+'</span></div>'
+    +mF('品項',esc(String(t.service).replace(/^商品：/,'')))+mF('下單時間',fmtDate(t.created_at))+mF('付款',esc(t.method||'—'))
+    +mF('狀態','<select class="in" data-sost>'+opt+'</select>')+mF('訂單編號',esc(t.order_ref||'—'))+mF('末五碼',esc(t.pay_last5||'—'))
+    +mF('收件資訊／備註',esc(String(t.notes||'').replace(/^［商品訂單］/,'')||'—'))
+    +'<div class="m-saved"></div><div class="m-btns">'+(c?'<button type="button" data-mcust>看這位客人</button>':'')+'<button type="button" class="dl" data-sodel>刪除</button></div></div>';
+  mDetail('tab-shop','訂單明細',h,function(d){
+    var sv=d.querySelector('.m-saved');
+    d.querySelector('[data-sost]').onchange=async function(){ var v=this.value; sv.textContent='儲存中…'; sv.style.color='var(--soft)';
+      var r=await db.from('transactions').update({status:v}).eq('id',id);
+      if(r.error){ sv.textContent='存檔失敗：'+r.error.message; sv.style.color='#C0506A'; return; }
+      t.status=v; sv.textContent='已儲存'; sv.style.color='#4F8E6E'; setTimeout(function(){ sv.textContent=''; },1200);
+      render(); renderReport(); renderShopOrders(); };
+    d.querySelector('[data-sodel]').onclick=async function(){ if(!confirm('刪除這筆商品訂單？會移到「刪除紀錄」，可還原。')) return;
+      if(await softDelete('transactions',id,TX)){ mCloseDetail($('#tab-shop')); renderTx(); render(); renderTrash(); renderShopOrders(); } };
+    var cb=d.querySelector('[data-mcust]'); if(cb) cb.onclick=function(){ openCustDetail(t.customer_id); };
+  },backTab?function(){ goTab(backTab); }:null);
+}
+function openCustDetail(cid){
+  goTab('customers');
+  var card=document.querySelector('#list .cust[data-id="'+cid+'"]');
+  if(!card){ ['search','f-source','f-status','f-type'].forEach(function(x){ var e=document.getElementById(x); if(e) e.value=''; }); render(); card=document.querySelector('#list .cust[data-id="'+cid+'"]'); }
+  if(!card) return;
+  if(isM()) mOpenCard(card); else { card.classList.remove('collapsed'); card.scrollIntoView({block:'start',behavior:'smooth'}); }
+}
+(function(){
+  document.body.classList.add('m-at-home');
+  // 每個分頁上方的「‹ 返回」（手機才顯示）
+  MMENU.forEach(function(m){
+    var sec=document.getElementById('tab-'+m.t); if(!sec) return;
+    var top=document.createElement('div'); top.className='m-top';
+    top.innerHTML='<button type="button" class="m-back">‹ 返回</button><span class="m-h">'+m.n+'</span>';
+    top.querySelector('button').onclick=mGoHome;
+    sec.insertBefore(top,sec.firstChild);
+  });
+  [['tab-customers','客戶明細'],['tab-guides','引路人明細']].forEach(function(x){
+    var sec=document.getElementById(x[0]); if(!sec) return;
+    var top=document.createElement('div'); top.className='m-cardtop';
+    top.innerHTML='<button type="button" class="m-back">‹ 回列表</button><span class="m-h">'+x[1]+'</span>';
+    top.querySelector('button').onclick=function(){ mCloseDetail(sec); window.scrollTo(0,0); };
+    sec.insertBefore(top,sec.firstChild);
+  });
+  var home=$('#m-home');
+  if(home) home.addEventListener('click',function(e){ var b=e.target.closest('[data-mgo]'); if(!b) return; var t=b.getAttribute('data-mgo');
+    if(t==='shop-orders'){ goTab('shop'); var ob=document.querySelector('[data-shopv="orders"]'); if(ob) ob.click(); } else goTab(t); });
+  var title=document.querySelector('.admin-title'); if(title){ title.style.cursor='pointer'; title.onclick=function(){ if(isM()) mGoHome(); }; }
+  var ta=$('#m-txadd'), tf=$('#m-txf'), tx=$('#tab-tx');
+  if(ta) ta.onclick=function(){ var on=tx.classList.toggle('m-show-add'); ta.textContent=on?'收起新增':'＋ 新增交易／儲值'; };
+  if(tf) tf.onclick=function(){ var on=tx.classList.toggle('m-show-f'); tf.textContent=on?'收起篩選':'篩選'; };
+  // 重畫列表後：手機明細頁維持開著＋首頁數字更新
+  var _r=render; render=function(){ _r.apply(this,arguments); mRestoreCard('list'); renderMHome(); };
+  var _g=renderGuides; renderGuides=function(){ _g.apply(this,arguments); mRestoreCard('glist'); renderMHome(); };
+  var _t=renderTx; renderTx=function(){ _t.apply(this,arguments); renderMHome(); if(activeTab==='cal') renderCal(); };
+  var _s=renderShopOrders; renderShopOrders=function(){ _s.apply(this,arguments); renderMHome(); };
+  // 手機／電腦切換（轉橫向、拉視窗）時重畫有分兩種版型的列表
+  if(MQ){ var onMQ=function(){ renderTx(); renderReport(); renderShopOrders(); if(activeTab==='shop') loadShop(); }; if(MQ.addEventListener) MQ.addEventListener('change',onMQ); else if(MQ.addListener) MQ.addListener(onMQ); }
+  renderMHome();
+})();
+
+init();
+</script>
+<script src="date-ph.js"></script>
+</body>
+</html>
